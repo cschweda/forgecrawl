@@ -374,22 +374,24 @@ npm install example-sdk
         </div>
 
         <!-- Domain input -->
-        <div class="max-w-xl mx-auto mb-12">
-          <label class="block text-sm font-semibold text-center mb-3 text-(--color-neutral-500)">
-            Enter your VPS domain to personalize the examples below
-          </label>
+        <div class="max-w-2xl mx-auto mb-14 rounded-2xl border border-(--color-orange-500)/30 bg-(--color-orange-500)/5 p-8">
+          <div class="flex items-center justify-center gap-2 mb-2">
+            <UIcon name="i-lucide-globe" class="text-(--color-orange-500) text-xl" />
+            <h3 class="text-lg font-bold">Your server, your domain</h3>
+          </div>
+          <p class="text-sm text-(--color-neutral-500) text-center mb-5">Enter your VPS domain below — every API example on this page updates in real time.</p>
           <div class="relative">
-            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <span class="font-mono text-sm text-(--color-neutral-400)">https://</span>
+            <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+              <span class="font-mono text-base text-(--color-neutral-400)">https://</span>
             </div>
             <input
               v-model="userDomain"
               type="text"
               placeholder="your-server.example.com"
-              class="w-full rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-700) bg-white dark:bg-(--color-neutral-900) pl-20 pr-4 py-3 font-mono text-sm text-(--color-orange-500) placeholder:text-(--color-neutral-400) focus:outline-none focus:ring-2 focus:ring-(--color-orange-500)/50 focus:border-(--color-orange-500) transition-all"
+              class="w-full rounded-xl border-2 border-(--color-orange-500)/40 bg-white dark:bg-(--color-neutral-900) pl-24 pr-5 py-4 font-mono text-lg text-(--color-orange-500) placeholder:text-(--color-neutral-400) focus:outline-none focus:ring-3 focus:ring-(--color-orange-500)/30 focus:border-(--color-orange-500) transition-all"
             />
           </div>
-          <p class="text-xs text-(--color-neutral-400) text-center mt-2">This is your self-hosted server — ForgeCrawl runs on your infrastructure, not ours.</p>
+          <p class="text-xs text-(--color-neutral-400) text-center mt-3">ForgeCrawl is self-hosted — it runs on your infrastructure, not ours. No account needed.</p>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8">
