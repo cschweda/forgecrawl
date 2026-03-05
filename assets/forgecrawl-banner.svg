@@ -79,11 +79,10 @@
       </feMerge>
     </filter>
 
-    <!-- Text glow - stronger -->
+    <!-- Text glow - subtle -->
     <filter id="text-glow">
-      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feGaussianBlur stdDeviation="6" result="blur"/>
       <feMerge>
-        <feMergeNode in="blur"/>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
