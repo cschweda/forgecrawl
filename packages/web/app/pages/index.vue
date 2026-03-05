@@ -57,14 +57,125 @@ const steps = [
 ]
 
 const endpoints = [
-  { method: 'GET', path: '/api/health', auth: false, color: 'success' as const },
-  { method: 'POST', path: '/api/scrape', auth: true, color: 'info' as const },
-  { method: 'GET', path: '/api/scrapes', auth: true, color: 'success' as const },
-  { method: 'GET', path: '/api/scrapes/:id', auth: true, color: 'success' as const },
-  { method: 'DELETE', path: '/api/scrapes/:id', auth: true, color: 'error' as const },
-  { method: 'POST', path: '/api/auth/api-keys', auth: true, color: 'info' as const },
-  { method: 'GET', path: '/api/auth/api-keys', auth: true, color: 'success' as const },
-  { method: 'DELETE', path: '/api/auth/api-keys/:id', auth: true, color: 'error' as const },
+  {
+    method: 'GET', path: '/api/health', auth: false, color: 'success' as const,
+    description: 'Returns server health status and version info.',
+    curl: 'curl {base}/api/health',
+    response: `{
+  "status": "ok",
+  "version": "1.0.0",
+  "uptime": 84623
+}`,
+  },
+  {
+    method: 'POST', path: '/api/scrape', auth: true, color: 'info' as const,
+    description: 'Scrape a URL and return clean Markdown with metadata. Send {"url": "https://..."} in the request body.',
+    curl: `curl -X POST {base}/api/scrape \\
+  -H "Authorization: Bearer $FC_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"url": "https://example.com"}'`,
+    response: `{
+  "job_id": "c7f3a1b2-9e4d-4c8a-...",
+  "title": "Example Domain",
+  "markdown": "---\\ntitle: Example Domain\\n...\\n---\\n\\n# Example Domain\\n...",
+  "rawHtml": "<!doctype html>...",
+  "wordCount": 28,
+  "metadata": {
+    "url": "https://example.com",
+    "canonical": null,
+    "excerpt": "This domain is for use in...",
+    "language": "en",
+    "scrapedAt": "2026-03-05T14:22:08.431Z"
+  },
+  "cached": false
+}`,
+  },
+  {
+    method: 'GET', path: '/api/scrapes', auth: true, color: 'success' as const,
+    description: 'List all scrape jobs for the authenticated user, ordered by most recent.',
+    curl: `curl {base}/api/scrapes \\
+  -H "Authorization: Bearer $FC_KEY"`,
+    response: `[
+  {
+    "id": "c7f3a1b2-9e4d-4c8a-...",
+    "url": "https://example.com",
+    "status": "completed",
+    "createdAt": "2026-03-05T14:22:07Z",
+    "completedAt": "2026-03-05T14:22:08Z"
+  },
+  {
+    "id": "a8d2e5f1-3b7c-4a9e-...",
+    "url": "https://docs.acme.com/start",
+    "status": "completed",
+    "createdAt": "2026-03-05T14:20:01Z",
+    "completedAt": "2026-03-05T14:20:03Z"
+  }
+]`,
+  },
+  {
+    method: 'GET', path: '/api/scrapes/:id', auth: true, color: 'success' as const,
+    description: 'Retrieve full results for a specific scrape job by ID.',
+    curl: `curl {base}/api/scrapes/c7f3a1b2-9e4d-4c8a-... \\
+  -H "Authorization: Bearer $FC_KEY"`,
+    response: `{
+  "id": "c7f3a1b2-9e4d-4c8a-...",
+  "url": "https://example.com",
+  "status": "completed",
+  "title": "Example Domain",
+  "markdown": "---\\ntitle: Example Domain\\n...---\\n\\n# Example Domain\\n...",
+  "wordCount": 28,
+  "metadata": { ... },
+  "createdAt": "2026-03-05T14:22:07Z",
+  "completedAt": "2026-03-05T14:22:08Z"
+}`,
+  },
+  {
+    method: 'DELETE', path: '/api/scrapes/:id', auth: true, color: 'error' as const,
+    description: 'Delete a scrape job and its results permanently.',
+    curl: `curl -X DELETE {base}/api/scrapes/c7f3a1b2-9e4d-4c8a-... \\
+  -H "Authorization: Bearer $FC_KEY"`,
+    response: `{
+  "message": "Scrape job deleted"
+}`,
+  },
+  {
+    method: 'POST', path: '/api/auth/api-keys', auth: true, color: 'info' as const,
+    description: 'Create a new API key for Bearer token authentication. The key is only shown once.',
+    curl: `curl -X POST {base}/api/auth/api-keys \\
+  -H "Authorization: Bearer $FC_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "my-script"}'`,
+    response: `{
+  "id": "e4f5a6b7-8c9d-4e0f-...",
+  "name": "my-script",
+  "key": "fc_a1b2c3d4e5f6...",
+  "createdAt": "2026-03-05T14:25:00Z"
+}`,
+  },
+  {
+    method: 'GET', path: '/api/auth/api-keys', auth: true, color: 'success' as const,
+    description: 'List all API keys for the authenticated user. Keys are masked for security.',
+    curl: `curl {base}/api/auth/api-keys \\
+  -H "Authorization: Bearer $FC_KEY"`,
+    response: `[
+  {
+    "id": "e4f5a6b7-8c9d-4e0f-...",
+    "name": "my-script",
+    "lastFour": "f6a1",
+    "createdAt": "2026-03-05T14:25:00Z",
+    "lastUsedAt": "2026-03-05T15:10:33Z"
+  }
+]`,
+  },
+  {
+    method: 'DELETE', path: '/api/auth/api-keys/:id', auth: true, color: 'error' as const,
+    description: 'Revoke an API key permanently. It cannot be recovered.',
+    curl: `curl -X DELETE {base}/api/auth/api-keys/e4f5a6b7-8c9d-4e0f-... \\
+  -H "Authorization: Bearer $FC_KEY"`,
+    response: `{
+  "message": "API key revoked"
+}`,
+  },
 ]
 
 const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose JWT', 'Readability', 'Turndown', 'Docker', 'PM2']
@@ -519,12 +630,24 @@ npm install @acme/sdk
 
           <div>
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Response</h3>
-            <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
+            <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto max-h-[340px] overflow-y-auto">
               <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)">{
-  <span class="text-sky-600 dark:text-sky-400">"job_id"</span>: <span class="text-amber-600 dark:text-amber-400">"a1b2c3..."</span>,
+  <span class="text-sky-600 dark:text-sky-400">"job_id"</span>: <span class="text-amber-600 dark:text-amber-400">"c7f3a1b2-9e4d-4c8a-b5f6-2d1e0a3b4c5d"</span>,
   <span class="text-sky-600 dark:text-sky-400">"title"</span>: <span class="text-amber-600 dark:text-amber-400">"Example Domain"</span>,
-  <span class="text-sky-600 dark:text-sky-400">"markdown"</span>: <span class="text-amber-600 dark:text-amber-400">"---\ntitle: Example Domain\n..."</span>,
-  <span class="text-sky-600 dark:text-sky-400">"wordCount"</span>: <span class="text-violet-600 dark:text-violet-400">42</span>,
+  <span class="text-sky-600 dark:text-sky-400">"markdown"</span>: <span class="text-amber-600 dark:text-amber-400">"---\ntitle: Example Domain\nurl: https://example.com\nscraped_at: 2026-03-05T14:22:08Z\nscraper: ForgeCrawl/1.0\nword_count: 28\n---\n\n# Example Domain\n\nThis domain is for use in illustrative examples in\ndocuments. You may use this domain in literature\nwithout prior coordination or asking for permission.\n\n[More information...](https://www.iana.org/domains/example)"</span>,
+  <span class="text-sky-600 dark:text-sky-400">"rawHtml"</span>: <span class="text-amber-600 dark:text-amber-400">"&lt;!doctype html&gt;\n&lt;html&gt;\n&lt;head&gt;\n  &lt;title&gt;Example Domain&lt;/title&gt;..."</span>,
+  <span class="text-sky-600 dark:text-sky-400">"wordCount"</span>: <span class="text-violet-600 dark:text-violet-400">28</span>,
+  <span class="text-sky-600 dark:text-sky-400">"metadata"</span>: {
+    <span class="text-sky-600 dark:text-sky-400">"url"</span>: <span class="text-amber-600 dark:text-amber-400">"https://example.com"</span>,
+    <span class="text-sky-600 dark:text-sky-400">"canonical"</span>: <span class="text-violet-600 dark:text-violet-400">null</span>,
+    <span class="text-sky-600 dark:text-sky-400">"excerpt"</span>: <span class="text-amber-600 dark:text-amber-400">"This domain is for use in illustrative examples in documents."</span>,
+    <span class="text-sky-600 dark:text-sky-400">"byline"</span>: <span class="text-violet-600 dark:text-violet-400">null</span>,
+    <span class="text-sky-600 dark:text-sky-400">"siteName"</span>: <span class="text-violet-600 dark:text-violet-400">null</span>,
+    <span class="text-sky-600 dark:text-sky-400">"language"</span>: <span class="text-amber-600 dark:text-amber-400">"en"</span>,
+    <span class="text-sky-600 dark:text-sky-400">"ogImage"</span>: <span class="text-violet-600 dark:text-violet-400">null</span>,
+    <span class="text-sky-600 dark:text-sky-400">"publishedTime"</span>: <span class="text-violet-600 dark:text-violet-400">null</span>,
+    <span class="text-sky-600 dark:text-sky-400">"scrapedAt"</span>: <span class="text-amber-600 dark:text-amber-400">"2026-03-05T14:22:08.431Z"</span>
+  },
   <span class="text-sky-600 dark:text-sky-400">"cached"</span>: <span class="text-violet-600 dark:text-violet-400">false</span>
 }</pre>
             </div>
@@ -551,18 +674,36 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
         <!-- Endpoints -->
         <div class="mt-12">
           <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-6">All endpoints</h3>
-          <div class="grid sm:grid-cols-2 gap-3">
-            <div
+          <div class="space-y-3">
+            <details
               v-for="ep in endpoints"
               :key="`${ep.method}-${ep.path}`"
-              class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) px-4 py-3 flex items-center gap-3 font-mono text-sm"
+              class="group rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) overflow-hidden"
             >
-              <UBadge :color="ep.color" variant="subtle" size="xs" :label="ep.method" class="font-bold" />
-              <code class="text-(--color-neutral-500) truncate"><span class="text-(--color-orange-500)">{{ apiBase }}</span>{{ ep.path }}</code>
-              <span class="ml-auto text-xs" :class="ep.auth ? 'text-(--color-orange-500)' : 'text-(--color-neutral-400)'">
-                {{ ep.auth ? 'Bearer' : 'public' }}
-              </span>
-            </div>
+              <summary class="px-4 py-3 flex items-center gap-3 font-mono text-sm cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                <UIcon name="i-lucide-chevron-right" class="text-(--color-neutral-400) transition-transform group-open:rotate-90 shrink-0" />
+                <UBadge :color="ep.color" variant="subtle" size="xs" :label="ep.method" class="font-bold" />
+                <code class="text-(--color-neutral-500) truncate"><span class="text-(--color-orange-500)">{{ apiBase }}</span>{{ ep.path }}</code>
+                <span class="ml-auto text-xs shrink-0" :class="ep.auth ? 'text-(--color-orange-500)' : 'text-(--color-neutral-400)'">
+                  {{ ep.auth ? 'Bearer' : 'public' }}
+                </span>
+              </summary>
+              <div class="border-t border-(--color-neutral-200) dark:border-(--color-neutral-800) px-4 py-4 space-y-3">
+                <p class="text-sm text-(--color-neutral-500)">{{ ep.description }}</p>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wider text-(--color-neutral-400) mb-2">Request</p>
+                  <div class="rounded-lg border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-white dark:bg-(--color-neutral-950) p-4 font-mono text-xs leading-relaxed overflow-x-auto">
+                    <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> {{ ep.curl.replaceAll('{base}', apiBase) }}</pre>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wider text-(--color-neutral-400) mb-2">Response</p>
+                  <div class="rounded-lg border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-white dark:bg-(--color-neutral-950) p-4 font-mono text-xs leading-relaxed overflow-x-auto max-h-[240px] overflow-y-auto">
+                    <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)">{{ ep.response }}</pre>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </section>
