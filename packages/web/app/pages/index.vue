@@ -461,7 +461,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
           <div class="mt-10 text-center">
             <p class="text-sm text-(--color-neutral-400)">
               81 integration tests covering auth, SSRF, rate limiting, error sanitization, and data isolation.
-              <a href="https://github.com/cschweda/forgecrawl#testing" target="_blank" rel="noopener" class="text-(--color-orange-500) hover:underline">View test details →</a>
+              <a href="#api" class="text-(--color-orange-500) hover:underline">Explore the API →</a>
             </p>
           </div>
         </div>
@@ -611,8 +611,8 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
           </div>
           <div class="flex items-center gap-6 text-sm text-(--color-neutral-500)">
             <a href="https://github.com/cschweda/forgecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
-            <a href="https://github.com/cschweda/forgecrawl#documentation" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">Docs</a>
-            <a href="https://github.com/cschweda/forgecrawl#api" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
+            <a href="#why-markdown" class="hover:text-(--color-orange-500) transition-colors">Why Markdown</a>
+            <a href="#api" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
           </div>
         </div>
       </div>
