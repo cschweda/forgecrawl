@@ -14,7 +14,7 @@ const features = [
   {
     icon: 'i-lucide-badge-dollar-sign',
     title: 'Free Forever',
-    description: 'No per-page pricing. No API keys to buy. Scrape as much as you want on your own infrastructure.',
+    description: 'No monthly fees. No per-page pricing. No usage caps. No API keys to buy. Self-hosted on your own VPS — the only cost is your server.',
   },
   {
     icon: 'i-lucide-shield-check',
@@ -157,9 +157,14 @@ const userStories = [
               Web content forged into
               <span class="bg-gradient-to-r from-(--color-orange-400) to-(--color-orange-600) bg-clip-text text-transparent">Markdown for LLMs</span>
             </h1>
-            <p class="text-lg sm:text-xl text-(--color-neutral-500) leading-relaxed mb-10 max-w-2xl mx-auto">
+            <p class="text-lg sm:text-xl text-(--color-neutral-500) leading-relaxed mb-6 max-w-2xl mx-auto">
               Self-hosted, authenticated web scraper that converts any webpage into clean, structured Markdown — optimized for RAG pipelines, fine-tuning, and LLM prompts.
             </p>
+
+            <div class="inline-flex items-center gap-3 rounded-full border border-(--color-orange-500)/30 bg-(--color-orange-500)/5 px-5 py-2.5 mb-10">
+              <UIcon name="i-lucide-badge-dollar-sign" class="text-(--color-orange-500) text-lg" />
+              <span class="text-sm font-semibold">100% free &amp; self-hosted — no monthly fees, no usage limits, no API charges. You only pay for your own VPS.</span>
+            </div>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
               <UButton
@@ -343,6 +348,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
         <div class="text-center mb-16">
           <p class="text-sm font-semibold tracking-widest uppercase text-(--color-orange-500) mb-3">Get Started</p>
           <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Deploy in under a minute</h2>
+          <p class="mt-4 text-(--color-neutral-500) max-w-2xl mx-auto">No sign-ups. No subscriptions. No usage limits. Clone, deploy, and scrape — forever free on your own server.</p>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8">
@@ -356,7 +362,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
               <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
-<span class="text-(--color-orange-500)">$</span> cd orangecrawl
+<span class="text-(--color-orange-500)">$</span> cd forgecrawl
 <span class="text-(--color-orange-500)">$</span> docker compose up -d
 <span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
             </div>
@@ -372,7 +378,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
               <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
-<span class="text-(--color-orange-500)">$</span> cd orangecrawl && pnpm install
+<span class="text-(--color-orange-500)">$</span> cd forgecrawl && pnpm install
 <span class="text-(--color-orange-500)">$</span> cp .env.example .env
 <span class="text-(--color-orange-500)">$</span> pnpm build && pm2 start ecosystem.config.cjs
 <span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
