@@ -284,67 +284,179 @@ const userStories = [
         </div>
 
         <!-- Before/After comparison -->
-        <div class="grid lg:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto items-start">
           <div class="rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/20 p-6">
             <div class="flex items-center gap-2 mb-4">
               <UIcon name="i-lucide-x-circle" class="text-red-500" />
-              <span class="font-bold text-sm uppercase tracking-wider text-red-600 dark:text-red-400">Raw HTML (~42KB)</span>
+              <span class="font-bold text-sm uppercase tracking-wider text-red-600 dark:text-red-400">Raw HTML — 41,823 bytes</span>
             </div>
-            <div class="rounded-xl bg-white/80 dark:bg-(--color-neutral-950) border border-(--color-neutral-200) dark:border-(--color-neutral-800) p-4 font-mono text-xs leading-relaxed overflow-x-auto text-(--color-neutral-500)">
+            <div class="rounded-xl bg-white/80 dark:bg-(--color-neutral-950) border border-(--color-neutral-200) dark:border-(--color-neutral-800) p-4 font-mono text-xs leading-relaxed overflow-x-auto text-(--color-neutral-500) max-h-[480px] overflow-y-auto">
               <pre>&lt;!DOCTYPE html&gt;
-&lt;html lang="en" class="dark-mode"&gt;
+&lt;html lang="en" dir="ltr" class="dark-mode js"&gt;
 &lt;head&gt;
-  &lt;script&gt;window.__NEXT_DATA__={...}&lt;/script&gt;
-  &lt;link rel="stylesheet" href="/css/main.a8f2.css"&gt;
-  &lt;!-- 47 more link/script tags --&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width"&gt;
+  &lt;title&gt;Getting Started | Acme Docs&lt;/title&gt;
+  &lt;meta name="description" content="Quick start guide"&gt;
+  &lt;meta property="og:title" content="Getting Started"&gt;
+  &lt;meta property="og:image" content="/img/og.png"&gt;
+  &lt;link rel="stylesheet" href="/css/main.a8f2c4.css"&gt;
+  &lt;link rel="stylesheet" href="/css/vendor.3e91.css"&gt;
+  &lt;link rel="stylesheet" href="/css/prism.f4a2.css"&gt;
+  &lt;link rel="preconnect" href="https://fonts.gstatic.com"&gt;
+  &lt;link rel="stylesheet" href="https://fonts.googleapis..."&gt;
+  &lt;script defer src="/js/analytics.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;window.__CONFIG__={"theme":"dark"}&lt;/script&gt;
+  &lt;script&gt;!function(e,t){e.dataLayer=e.dataLayer||[]
+    ;function n(){dataLayer.push(arguments)}n("js",
+    new Date);n("config","G-XXXXXXXX")}()&lt;/script&gt;
 &lt;/head&gt;
-&lt;body&gt;
-  &lt;nav class="flex items-center px-4..."&gt;
-    &lt;!-- 200 lines of navigation --&gt;
-  &lt;/nav&gt;
-  &lt;div id="content" class="prose max-w-none"&gt;
-    &lt;h1&gt;Getting Started&lt;/h1&gt;
-    &lt;p&gt;The actual content is buried here...&lt;/p&gt;
+&lt;body class="antialiased min-h-screen bg-white"&gt;
+  &lt;div id="__app"&gt;
+    &lt;header class="sticky top-0 z-50 w-full border-b
+      border-gray-200 bg-white/80 backdrop-blur"&gt;
+      &lt;div class="mx-auto max-w-7xl px-4 sm:px-6"&gt;
+        &lt;div class="flex h-16 items-center justify-between"&gt;
+          &lt;a href="/" class="flex items-center gap-2"&gt;
+            &lt;img src="/logo.svg" alt="Acme" width="32"&gt;
+            &lt;span class="font-bold text-lg"&gt;Acme Docs&lt;/span&gt;
+          &lt;/a&gt;
+          &lt;nav class="hidden md:flex items-center gap-6"&gt;
+            &lt;a href="/docs" class="text-sm font-medium
+              text-gray-600 hover:text-gray-900"&gt;Docs&lt;/a&gt;
+            &lt;a href="/api" class="text-sm font-medium
+              text-gray-600 hover:text-gray-900"&gt;API&lt;/a&gt;
+            &lt;a href="/blog" class="text-sm font-medium
+              text-gray-600 hover:text-gray-900"&gt;Blog&lt;/a&gt;
+            &lt;a href="/pricing" class="text-sm font-medium
+              text-gray-600 hover:text-gray-900"&gt;Pricing&lt;/a&gt;
+          &lt;/nav&gt;
+          &lt;div class="flex items-center gap-3"&gt;
+            &lt;button class="rounded-lg p-2 hover:bg-gray-100"
+              aria-label="Toggle theme"&gt;
+              &lt;svg class="h-5 w-5"&gt;...&lt;/svg&gt;
+            &lt;/button&gt;
+            &lt;a href="/login" class="rounded-lg bg-blue-600
+              px-4 py-2 text-sm text-white"&gt;Sign In&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+    &lt;aside class="fixed left-0 top-16 w-64 border-r
+      border-gray-200 overflow-y-auto h-[calc(100vh-4rem)]"&gt;
+      &lt;nav class="p-4 space-y-1"&gt;
+        &lt;a href="/docs/intro" class="block rounded-md px-3
+          py-2 text-sm text-gray-600"&gt;Introduction&lt;/a&gt;
+        &lt;a href="/docs/start" class="block rounded-md px-3
+          py-2 text-sm font-medium bg-blue-50
+          text-blue-700"&gt;Getting Started&lt;/a&gt;
+        &lt;a href="/docs/config" class="block rounded-md px-3
+          py-2 text-sm text-gray-600"&gt;Configuration&lt;/a&gt;
+        &lt;a href="/docs/deploy" class="block rounded-md px-3
+          py-2 text-sm text-gray-600"&gt;Deployment&lt;/a&gt;
+      &lt;/nav&gt;
+    &lt;/aside&gt;
+    &lt;main class="ml-64 pt-16"&gt;
+      &lt;article class="prose prose-blue max-w-none px-8 py-12"&gt;
+        &lt;h1 id="getting-started"&gt;Getting Started&lt;/h1&gt;
+        &lt;p&gt;Install the SDK to get started with Acme.&lt;/p&gt;
+        &lt;h2 id="installation"&gt;Installation&lt;/h2&gt;
+        &lt;p&gt;Run the following command:&lt;/p&gt;
+        &lt;div class="code-block relative group"&gt;
+          &lt;button class="absolute right-2 top-2 opacity-0
+            group-hover:opacity-100 rounded bg-gray-700 px-2
+            py-1 text-xs text-white"&gt;Copy&lt;/button&gt;
+          &lt;pre class="language-bash"&gt;&lt;code&gt;npm install
+            @acme/sdk&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+        &lt;h2 id="configuration"&gt;Configuration&lt;/h2&gt;
+        &lt;div class="overflow-x-auto"&gt;
+          &lt;table class="min-w-full divide-y divide-gray-200"&gt;
+            &lt;thead class="bg-gray-50"&gt;
+              &lt;tr&gt;
+                &lt;th class="px-4 py-3 text-left text-xs
+                  font-medium uppercase text-gray-500"&gt;
+                  Option&lt;/th&gt;
+                &lt;th class="px-4 py-3 text-left text-xs
+                  font-medium uppercase text-gray-500"&gt;
+                  Default&lt;/th&gt;
+                &lt;th class="px-4 py-3 text-left text-xs
+                  font-medium uppercase text-gray-500"&gt;
+                  Description&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody class="divide-y divide-gray-200"&gt;
+              &lt;tr&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;timeout&lt;/td&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;30s&lt;/td&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;Request
+                  timeout&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;retries&lt;/td&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;3&lt;/td&gt;
+                &lt;td class="px-4 py-3 text-sm"&gt;Max retry
+                  count&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/main&gt;
+    &lt;footer class="ml-64 border-t border-gray-200 px-8 py-6"&gt;
+      &lt;div class="flex justify-between text-sm text-gray-500"&gt;
+        &lt;span&gt;&amp;copy; 2026 Acme Inc.&lt;/span&gt;
+        &lt;div class="flex gap-4"&gt;
+          &lt;a href="/privacy"&gt;Privacy&lt;/a&gt;
+          &lt;a href="/terms"&gt;Terms&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/footer&gt;
   &lt;/div&gt;
-  &lt;footer&gt;...&lt;/footer&gt;
-  &lt;script src="/js/bundle.f3e1.js"&gt;&lt;/script&gt;
-&lt;/body&gt;&lt;/html&gt;</pre>
+  &lt;script src="/js/vendor.8f3a.js"&gt;&lt;/script&gt;
+  &lt;script src="/js/app.2c7e.js"&gt;&lt;/script&gt;
+  &lt;script src="/js/prism.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
             </div>
           </div>
 
           <div class="rounded-2xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/20 p-6">
             <div class="flex items-center gap-2 mb-4">
               <UIcon name="i-lucide-check-circle" class="text-emerald-500" />
-              <span class="font-bold text-sm uppercase tracking-wider text-emerald-600 dark:text-emerald-400">ForgeCrawl Markdown (~2KB)</span>
+              <span class="font-bold text-sm uppercase tracking-wider text-emerald-600 dark:text-emerald-400">ForgeCrawl Markdown — 547 bytes</span>
             </div>
             <div class="rounded-xl bg-white/80 dark:bg-(--color-neutral-950) border border-(--color-neutral-200) dark:border-(--color-neutral-800) p-4 font-mono text-xs leading-relaxed overflow-x-auto text-(--color-neutral-500)">
               <pre>---
 title: Getting Started
-url: https://example.com/docs/start
+url: https://docs.acme.com/docs/start
 description: Quick start guide
 scraped_at: 2026-03-05T10:30:00Z
 scraper: ForgeCrawl/1.0
-word_count: 847
+word_count: 42
 ---
 
 # Getting Started
 
-The actual content starts immediately.
+Install the SDK to get started with Acme.
 
 ## Installation
 
 Run the following command:
 
 ```bash
-npm install example-sdk
+npm install @acme/sdk
 ```
 
 ## Configuration
 
-| Option  | Default | Description      |
-|---------|---------|------------------|
-| timeout | 30s     | Request timeout  |
-| retries | 3       | Max retry count  |</pre>
+| Option  | Default | Description     |
+|---------|---------|-----------------|
+| timeout | 30s     | Request timeout |
+| retries | 3       | Max retry count |</pre>
+            </div>
+            <div class="mt-4 rounded-xl bg-emerald-100/50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-4 py-3">
+              <p class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 text-center">Same content. 98.7% smaller. Zero noise.</p>
             </div>
           </div>
         </div>
