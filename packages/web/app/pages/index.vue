@@ -5,6 +5,9 @@ function toggleColorMode() {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 
+const userDomain = ref('your-server.example.com')
+const apiBase = computed(() => `https://${userDomain.value || 'your-server.example.com'}`)
+
 const features = [
   {
     icon: 'i-lucide-server',
@@ -366,15 +369,34 @@ npm install example-sdk
           <p class="text-sm font-semibold tracking-widest uppercase text-(--color-orange-500) mb-3">API</p>
           <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Built for automation</h2>
           <p class="mt-4 text-(--color-neutral-500) max-w-2xl mx-auto">
-            Every action in ForgeCrawl is available through the REST API. Authenticate with a Bearer token and integrate with any workflow. Replace <code class="text-(--color-orange-500)">your-server.example.com</code> with your own VPS domain or IP.
+            Every action in ForgeCrawl is available through the REST API. Authenticate with a Bearer token and integrate with any workflow.
           </p>
+        </div>
+
+        <!-- Domain input -->
+        <div class="max-w-xl mx-auto mb-12">
+          <label class="block text-sm font-semibold text-center mb-3 text-(--color-neutral-500)">
+            Enter your VPS domain to personalize the examples below
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <span class="font-mono text-sm text-(--color-neutral-400)">https://</span>
+            </div>
+            <input
+              v-model="userDomain"
+              type="text"
+              placeholder="your-server.example.com"
+              class="w-full rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-700) bg-white dark:bg-(--color-neutral-900) pl-20 pr-4 py-3 font-mono text-sm text-(--color-orange-500) placeholder:text-(--color-neutral-400) focus:outline-none focus:ring-2 focus:ring-(--color-orange-500)/50 focus:border-(--color-orange-500) transition-all"
+            />
+          </div>
+          <p class="text-xs text-(--color-neutral-400) text-center mt-2">This is your self-hosted server — ForgeCrawl runs on your infrastructure, not ours.</p>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8">
           <div>
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Scrape a page</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST https://your-server.example.com/api/scrape \
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST <span class="text-(--color-orange-500)">{{ apiBase }}</span>/api/scrape \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Authorization: Bearer $FC_KEY"</span> \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Content-Type: application/json"</span> \
   -d <span class="text-amber-600 dark:text-amber-400">'{"url": "https://example.com"}'</span></pre>
@@ -397,7 +419,7 @@ npm install example-sdk
           <div class="lg:col-span-2">
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Node.js example</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'https://your-server.example.com/api/scrape'</span>, {
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'<span class="text-(--color-orange-500)">{{ apiBase }}</span>/api/scrape'</span>, {
   method: <span class="text-amber-600 dark:text-amber-400">'POST'</span>,
   headers: {
     <span class="text-amber-600 dark:text-amber-400">'Authorization'</span>: <span class="text-amber-600 dark:text-amber-400">`Bearer ${process.env.FC_KEY}`</span>,
