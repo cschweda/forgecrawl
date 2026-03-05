@@ -27,7 +27,7 @@ ForgeCrawl is a different tool for a different audience. It's built for **solo d
 | **User management** | External / Supabase | Built-in with first-run setup |
 | **RAG chunking** | Not included | Built-in token-aware chunking |
 | **License** | AGPL-3.0 | MIT |
-| **Monthly cost** | Free (self-host) or $16+/mo cloud | From $6/mo VPS (see [requirements](#vps-requirements)) |
+| **Monthly cost** | Free (self-host) or $16+/mo cloud | From $6/mo VPS (see [VPS requirements](#vps-requirements) below) |
 
 ### What ForgeCrawl Adds
 
@@ -40,6 +40,28 @@ ForgeCrawl is a different tool for a different audience. It's built for **solo d
 ### What ForgeCrawl Doesn't Try To Be
 
 ForgeCrawl is not a Firecrawl replacement. It intentionally skips features that add complexity without serving the self-hosted use case: no billing system, no proxy infrastructure, no multi-region deployment, no AI extraction. It focuses on doing one thing well — turning web pages into clean Markdown on your own server.
+
+### VPS Requirements
+
+ForgeCrawl runs comfortably on modest hardware. The main constraint is Puppeteer/Chromium, which needs ~200-400MB per browser page for JavaScript rendering.
+
+| | Minimum | Recommended |
+|---|---------|-------------|
+| **CPU** | 1 vCPU | 2 vCPU |
+| **RAM** | 2 GB | 4 GB |
+| **Storage** | 25 GB SSD | 50 GB SSD |
+| **OS** | Ubuntu 22.04+ | Ubuntu 24.04 LTS |
+
+If you mostly scrape static pages (HTTP-only, no Puppeteer), a **$6/mo droplet** (1 vCPU / 1 GB) can work — just limit Puppeteer concurrency to 1 and expect occasional memory pressure on JS-heavy sites. A **$12/mo droplet** (1 vCPU / 2 GB) is the practical minimum for light Puppeteer use.
+
+| DigitalOcean Plan | Specs | ForgeCrawl Use Case |
+|---|---|---|
+| **$6/mo** | 1 vCPU / 1 GB / 25 GB | HTTP-only scraping, no JS rendering |
+| **$12/mo** | 1 vCPU / 2 GB / 50 GB | Light use, Puppeteer concurrency = 1 |
+| **$24/mo** | 2 vCPU / 4 GB / 80 GB | General use, 2-3 concurrent Puppeteer pages |
+| **$48/mo** | 4 vCPU / 8 GB / 160 GB | Heavy crawling, higher concurrency |
+
+Adjust `puppeteer.concurrency` in `forgecrawl.config.ts` to match your server's available RAM. Each concurrent Puppeteer page adds ~200-400MB of memory overhead.
 
 ## Features
 
@@ -68,28 +90,6 @@ ForgeCrawl is not a Firecrawl replacement. It intentionally skips features that 
 | JS Rendering | Puppeteer |
 | Content Extraction | Mozilla Readability |
 | HTML to Markdown | Turndown + GFM plugin |
-
-## VPS Requirements
-
-ForgeCrawl runs comfortably on modest hardware. The main constraint is Puppeteer/Chromium, which needs ~200-400MB per browser page for JavaScript rendering.
-
-| | Minimum | Recommended |
-|---|---------|-------------|
-| **CPU** | 1 vCPU | 2 vCPU |
-| **RAM** | 2 GB | 4 GB |
-| **Storage** | 25 GB SSD | 50 GB SSD |
-| **OS** | Ubuntu 22.04+ | Ubuntu 24.04 LTS |
-
-**Can you go cheaper than $24/mo?** Yes. If you mostly scrape static pages (HTTP-only, no Puppeteer), a **$6/mo droplet** (1 vCPU / 1 GB) can work — but you'll need to limit Puppeteer concurrency to 1 page and expect occasional memory pressure on JS-heavy sites. A **$12/mo droplet** (1 vCPU / 2 GB) is the practical minimum for light Puppeteer use.
-
-| DigitalOcean Plan | Specs | ForgeCrawl Use Case |
-|---|---|---|
-| **$6/mo** | 1 vCPU / 1 GB / 25 GB | HTTP-only scraping, no JS rendering |
-| **$12/mo** | 1 vCPU / 2 GB / 50 GB | Light use, Puppeteer concurrency = 1 |
-| **$24/mo** | 2 vCPU / 4 GB / 80 GB | General use, 2-3 concurrent Puppeteer pages |
-| **$48/mo** | 4 vCPU / 8 GB / 160 GB | Heavy crawling, higher concurrency |
-
-Adjust `puppeteer.concurrency` in `forgecrawl.config.ts` to match your server's available RAM. Each concurrent Puppeteer page adds ~200-400MB of memory overhead.
 
 ## Quick Start
 
@@ -178,13 +178,17 @@ See `forgecrawl.config.ts` for all public defaults and `.env.example` for secret
 
 ## Documentation
 
-Design documents are in the `docs/` directory:
+Design documents are in the [`docs/`](docs/) directory:
 
-- `00` — Master Design
-- `01-05` — Phase implementation specs
-- `06` — Security
-- `07` — LLM Build Prompt
-- `11` — SQLite Auth (authoritative schema)
+- [`00` — Master Design](docs/forgecrawl-00-master-design.md)
+- [`01` — Phase 1: Foundation & Auth](docs/forgecrawl-01-phase1.md)
+- [`02` — Phase 2: Puppeteer & Storage](docs/forgecrawl-02-phase2.md)
+- [`03` — Phase 3: Job Queue & Crawling](docs/forgecrawl-03-phase3.md)
+- [`04` — Phase 4: API Keys & Multi-User](docs/forgecrawl-04-phase4.md)
+- [`05` — Phase 5: RAG & Advanced](docs/forgecrawl-05-phase5.md)
+- [`06` — Security](docs/forgecrawl-06-security.md)
+- [`07` — LLM Build Prompt](docs/forgecrawl-07-llm-build-prompt.md)
+- [`11` — SQLite Auth (authoritative schema)](docs/forgecrawl-11-sqlite-auth.md)
 
 ## License
 
