@@ -352,45 +352,157 @@ Scraping user-supplied URLs is a high-risk operation. ForgeCrawl blocks SSRF at 
 
 ## Testing
 
-ForgeCrawl includes a comprehensive test suite covering authentication, security, and scraping functionality. Tests run against a real built server (not mocks) for maximum confidence.
+ForgeCrawl includes 81 integration tests across 10 test files, organized into four categories: **health**, **authentication**, **security**, and **scraping**. Every test runs against a real production-built server over HTTP — no mocks, no test doubles.
 
 ### Running tests
 
 ```bash
-# Run all tests
+# Run all 81 tests
 pnpm test
 
 # Run individual suites
-pnpm test:health      # Health check endpoint
-pnpm test:auth        # Auth: setup, login, API keys
-pnpm test:security    # Security: middleware, SSRF, rate limiting, error sanitization, data isolation
-pnpm test:scrape      # Scraping: fetch, cache, CRUD
+pnpm test:health      # Health check endpoint (6 tests)
+pnpm test:auth        # Auth: setup, login, API keys (21 tests)
+pnpm test:security    # Security: middleware, SSRF, rate limiting, error sanitization, data isolation (42 tests)
+pnpm test:scrape      # Scraping: fetch, cache, CRUD (10 tests)
 ```
-
-### Test suites (81 tests)
-
-| Suite | File | Tests | What it covers |
-|-------|------|-------|----------------|
-| Health | `01-health` | 6 | Status, version, database, setup state, no sensitive data leaks |
-| Auth Setup | `02-auth-setup` | 6 | Validation, admin creation, permanent setup lockout |
-| Auth Login | `03-auth-login` | 7 | Credential validation, cookie flags, no user enumeration, no password hash exposure |
-| API Keys | `04-auth-api-keys` | 8 | Key creation (`fc_` prefix), listing (no hash exposure), Bearer token auth, revocation |
-| Auth Middleware | `05-security-auth-middleware` | 10 | Public vs protected routes, session + Bearer auth, tampered JWT rejection |
-| SSRF | `06-security-ssrf` | 18 | Private IPs, localhost, cloud metadata, protocol blocklist, DNS resolution |
-| Rate Limiting | `07-security-rate-limit` | 4 | Login attempt throttling, case-insensitive email matching |
-| Error Sanitization | `08-security-error-sanitization` | 4 | No server path leaks, generic error messages, no user enumeration |
-| Scraping | `09-scrape` | 10 | URL validation, Markdown output, frontmatter, caching, CRUD operations |
-| Data Isolation | `10-security-data-isolation` | 6 | Cross-user access blocked, 404 (not 403) for missing resources |
 
 ### How tests work
 
-Tests use a custom global setup that:
-1. Builds the Nuxt app for production
-2. Starts the server as a child process on port 5199 with a clean test database
-3. Runs all tests using `ofetch` against the real HTTP server
-4. Tears down the server and cleans up test data
+Tests use [Vitest](https://vitest.dev/) with a custom global setup (`tests/setup/global-setup.ts`) that:
 
-No mocks, no test doubles — every test hits the real API through HTTP.
+1. **Builds the Nuxt app** for production (`pnpm build`)
+2. **Starts the server** as a child process on port 5199 with a clean, isolated test database
+3. **Runs all test files** sequentially — each file uses `ofetch` to make real HTTP requests against the running server
+4. **Tears down** the server process and deletes all test data when complete
+
+This approach tests the full stack end-to-end: HTTP routing, middleware, database queries, and response formatting. Test helpers (`tests/setup/test-helpers.ts`) provide shared utilities for login, API key creation, and authenticated requests.
+
+### Test suites overview
+
+| Suite | File | Tests | Category |
+|-------|------|:-----:|----------|
+| Health Check | `01-health` | 6 | Health |
+| Auth: Setup | `02-auth-setup` | 6 | Auth |
+| Auth: Login | `03-auth-login` | 7 | Auth |
+| Auth: API Keys | `04-auth-api-keys` | 8 | Auth |
+| Security: Auth Middleware | `05-security-auth-middleware` | 10 | Security |
+| Security: SSRF Protection | `06-security-ssrf` | 18 | Security |
+| Security: Rate Limiting | `07-security-rate-limit` | 4 | Security |
+| Security: Error Sanitization | `08-security-error-sanitization` | 4 | Security |
+| Scraping | `09-scrape` | 10 | Scraping |
+| Security: Data Isolation | `10-security-data-isolation` | 6 | Security |
+
+### Detailed test descriptions
+
+#### 01 — Health Check (6 tests)
+
+Validates the unauthenticated `/api/health` endpoint:
+
+- Returns `200` with `status: "ok"`
+- Returns a version string and database connection status
+- Returns `setup_complete` boolean (used by the UI to route to setup or login)
+- Does **not** expose `memory` or `uptime` (prevents server fingerprinting)
+- Confirms no authentication is required
+
+#### 02 — Auth: Setup (6 tests)
+
+Tests the one-time admin registration flow (`POST /api/auth/setup`):
+
+- Rejects requests with missing email, short passwords (< 8 chars), or mismatched password confirmation — returns `400`
+- Creates the admin account and sets an HTTP-only session cookie on success
+- **Permanently locks the setup endpoint** after the first admin is created — all subsequent attempts return `403`, regardless of credentials
+- Adapts assertions if setup was already completed by an earlier test file (order-independent)
+
+#### 03 — Auth: Login (7 tests)
+
+Tests credential validation and session management (`POST /api/auth/login`):
+
+- Rejects missing fields with `400`
+- Rejects wrong password and non-existent email with identical `401` responses and the same `"Invalid credentials"` message — **prevents user enumeration** (an attacker cannot determine which emails have accounts)
+- Returns `200` with a `forgecrawl_session` cookie that has `HttpOnly`, `SameSite=Lax`, and `Path=/` flags
+- Returns user data (`email`, `role`) on successful login
+- Verifies the response body never contains `passwordHash`, `password_hash`, or bcrypt hashes (`$2b$`)
+
+#### 04 — Auth: API Keys (8 tests)
+
+Tests Bearer token authentication lifecycle (`/api/auth/api-keys`):
+
+- Creates an API key with the `fc_` prefix and a 64-character hex suffix (e.g., `fc_a1b2c3...`)
+- Returns the raw key exactly once at creation with a warning it won't be shown again
+- Rejects key creation without a `name` field
+- Lists keys showing only the prefix (`fc_a1b2`) and name — **never exposes the full key or SHA-256 hash**
+- Authenticates requests using `Authorization: Bearer fc_...` header
+- Rejects invalid Bearer tokens and tokens with wrong prefixes with `401`
+- Revokes a key via `DELETE /api/auth/api-keys/{id}` and confirms the revoked key is immediately rejected
+
+#### 05 — Security: Auth Middleware (10 tests)
+
+Tests the authentication middleware that protects all `/api/*` routes:
+
+- **Public routes:** `GET /api/health` is accessible without authentication
+- **Protected routes:** `GET /api/scrapes`, `GET /api/auth/me`, `POST /api/scrape`, and `GET /api/auth/api-keys` all return `401` without credentials
+- Accepts both session cookie auth and Bearer token auth
+- When both a Bearer token and a cookie are present, the **Bearer token takes priority** — allows API key auth even with a stale cookie
+- Rejects tampered JWT cookies (`forgecrawl_session=tampered.jwt.token`) with `401`
+- Rejects completely invalid cookies with `401`
+
+#### 06 — Security: SSRF Protection (18 tests)
+
+The largest test suite — validates that user-supplied URLs cannot be used to access internal resources:
+
+- **Localhost/loopback:** Blocks `localhost`, `127.0.0.1`, `0.0.0.0`, `[::1]`
+- **Cloud metadata:** Blocks `169.254.169.254` (AWS EC2 metadata) and `metadata.google.internal` (GCP)
+- **Private IP ranges:** Blocks `10.x.x.x` (Class A), `172.16.x.x` (Class B), `192.168.x.x` (Class C)
+- **Protocol allowlist:** Blocks `ftp://`, `file://`, `gopher://`, `javascript:` — only `http:` and `https:` are allowed
+- **Invalid URLs:** Blocks malformed input like `not-a-valid-url`
+- **Positive test:** Confirms a valid external HTTPS URL (`https://example.com`) succeeds
+
+All blocked URLs return `400`. This prevents attackers from using the scraper to probe internal networks, read cloud instance credentials, or access services behind the firewall.
+
+#### 07 — Security: Rate Limiting (4 tests)
+
+Tests the login rate limiter that prevents brute-force password attacks:
+
+- Allows the first 5 failed login attempts (each returns `401`)
+- Blocks the 6th attempt with `429 Too Many Requests`
+- Rate limiting is **case-insensitive** — `USER@TEST.COM` and `user@test.com` share the same counter (prevents bypass by varying case)
+- Uses a unique email per test run to avoid interference with other test suites
+
+#### 08 — Security: Error Sanitization (4 tests)
+
+Verifies that internal server details never leak to clients:
+
+- Scrape failures do not expose file paths (`/home/`, `/app/`, `/Users/`, `node_modules`)
+- Scrape failures do not expose source file references (`.ts:`, `.js:`)
+- Non-existent domain scrapes return `400` or `500` with a generic message — not raw Node.js error details
+- Login errors return the **same message** for wrong-email and wrong-password cases — reconfirms no user enumeration from a different angle
+
+#### 09 — Scraping (10 tests)
+
+Tests the core scraping engine and result management:
+
+- Rejects `POST /api/scrape` without a URL (`400`)
+- Scrapes `https://example.com` and validates: `job_id`, `title` ("Example Domain"), Markdown with frontmatter (`---`), `wordCount > 0`, and `metadata.url`
+- Validates YAML frontmatter contains `title:`, `url:`, `scraped_at:`, and `scraper: ForgeCrawl/`
+- Returns `cached: true` on repeated scrape of the same URL
+- Returns `cached: false` when `bypass_cache: true` is set
+- Lists all scrapes for the authenticated user with `url` and `status` fields
+- Gets scrape detail by ID with full Markdown content
+- Returns `404` for non-existent scrape IDs
+- Deletes a scrape and confirms it returns `404` afterward
+
+#### 10 — Security: Data Isolation (6 tests)
+
+Validates that users cannot access or modify other users' data:
+
+- Attempting to delete a non-owned scrape returns `404` (not `403`) — prevents confirming whether a resource exists
+- Attempting to view a non-owned scrape returns `404`
+- Attempting to delete a non-owned API key returns `404`
+- Scrape list returns only the current user's data (returns a valid array)
+- API key list returns only keys belonging to the current user, all with `fc_` prefix
+
+The deliberate use of `404` instead of `403` is a security pattern — returning `403 Forbidden` would confirm the resource exists but is owned by someone else, which leaks information.
 
 ## Phase 2: What's Next
 
