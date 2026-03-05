@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/forgecrawl-banner.png" alt="ForgeCrawl — Web content forged into Markdown for LLMs" width="100%">
+  <img src="assets/forgecrawl-banner.png?v=2" alt="ForgeCrawl — Web content forged into Markdown for LLMs" width="100%">
 </p>
 
 # ForgeCrawl
