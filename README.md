@@ -110,6 +110,27 @@ pm2 save && pm2 startup
 
 See [`ecosystem.config.cjs`](ecosystem.config.cjs) for PM2 tuning options.
 
+## Why a VPS? (Not Netlify / Vercel)
+
+ForgeCrawl requires a traditional server (VPS, Droplet, bare metal) and **cannot run on serverless platforms** like Netlify or Vercel. This isn't a limitation we plan to work around — it's fundamental to the architecture.
+
+| Requirement | VPS / Droplet | Netlify / Vercel |
+|---|---|---|
+| **SQLite database** | Persistent disk, single-file DB, trivial backups | No persistent filesystem — DB lost on every cold start |
+| **better-sqlite3** | Native C++ module, runs perfectly | Requires special bundling; synchronous I/O is an anti-pattern for serverless |
+| **WAL mode** | Single long-running process, safe concurrent reads | Multiple function instances = write conflicts and corruption risk |
+| **Puppeteer (Phase 2)** | Full Chrome, no size/time limits | Exceeds function size limits (~50MB zipped); cold starts are 10+ seconds |
+| **Long scrapes** | No timeout constraints | 10-26 second function timeout kills slow pages |
+| **File storage (Phase 2)** | Persistent disk for HTML/Markdown/chunks | Only ephemeral `/tmp` (512MB, wiped between invocations) |
+| **In-memory rate limiter** | Works correctly in a single process | Each function invocation has its own memory — rate limiting is meaningless |
+| **Stable process** | PM2 keeps it running with auto-restart | No persistent process; each request spins up a new instance |
+
+**Bottom line:** ForgeCrawl is a stateful application with a local database, native modules, and long-running operations. Serverless platforms are designed for stateless, short-lived functions. You'd need to swap SQLite for a managed database (Postgres, Turso), rewrite all I/O to be async, remove native dependencies, and accept severe Puppeteer limitations — at which point it's a different application.
+
+**Recommended hosts:** DigitalOcean Droplet ($6/mo), Hetzner VPS, AWS Lightsail, or any VPS with 1GB+ RAM and Node.js 22+. See the Docker Compose or PM2 quick starts above.
+
+> **Note:** The future marketing site (`packages/web`) *will* deploy to Netlify — it's static content with no server requirements.
+
 ## Project Structure
 
 ```
