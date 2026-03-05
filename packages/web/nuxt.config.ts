@@ -47,6 +47,34 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Self-hosted, authenticated web scraper that converts website content into clean Markdown optimized for LLM consumption.' },
         { name: 'twitter:image', content: 'https://forgecrawl.com/og-image.png' },
       ],
+      script: [
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'ForgeCrawl',
+            url: 'https://forgecrawl.com',
+            description:
+              'Self-hosted, authenticated web scraper that converts website content into clean Markdown optimized for LLM consumption. Free, secure, and ready to deploy.',
+            datePublished: '2026-03-05',
+            dateModified: '2026-03-05',
+            author: {
+              '@type': 'Person',
+              name: 'cschweda',
+            },
+            license: 'https://opensource.org/licenses/MIT',
+            isAccessibleForFree: true,
+            applicationCategory: 'DeveloperApplication',
+            operatingSystem: 'Cross-platform',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'USD',
+            },
+          }),
+        },
+      ],
       link: [
         { rel: 'canonical', href: 'https://forgecrawl.com' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

@@ -1,0 +1,28 @@
+# ForgeCrawl
+
+> Self-hosted, authenticated web scraper that converts website content into clean Markdown optimized for LLM consumption.
+
+ForgeCrawl is a free, open-source, self-hosted alternative to Firecrawl. It provides a REST API for scraping web pages and returning clean Markdown suitable for use with large language models (LLMs).
+
+## Key Features
+
+- Converts web content to clean Markdown optimized for LLM consumption
+- Self-hosted with full control over your data
+- JWT-based authentication for API security
+- SQLite database with Drizzle ORM (no external database needed)
+- Built with Nuxt 4 and deployable anywhere Node.js runs
+- Rate limiting, request caching, and concurrency controls
+- MIT licensed and free to use
+
+## API Endpoints
+
+- POST /api/v1/auth/setup — Create initial admin account
+- POST /api/v1/auth/login — Authenticate and receive JWT token
+- POST /api/v1/scrape — Scrape a URL and return Markdown content
+- GET /api/v1/health — Health check endpoint
+
+## Links
+
+- Website: https://forgecrawl.com
+- Source code: https://github.com/cschweda/forgecrawl
+- License: MIT
