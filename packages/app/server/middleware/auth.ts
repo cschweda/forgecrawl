@@ -1,4 +1,5 @@
 import { verifyToken } from '../auth/jwt'
+import { verifyApiKey } from '../auth/api-key'
 
 export default defineEventHandler(async (event) => {
   const path = getRequestURL(event).pathname
@@ -10,7 +11,20 @@ export default defineEventHandler(async (event) => {
   if (path === '/api/auth/logout') return
   if (!path.startsWith('/api/')) return
 
-  // Session cookie (JWT)
+  // 1. Check Bearer token (API key)
+  const authHeader = getHeader(event, 'authorization')
+  if (authHeader?.startsWith('Bearer ')) {
+    const rawKey = authHeader.slice(7)
+    const user = verifyApiKey(rawKey)
+    if (user) {
+      event.context.user = user
+      event.context.authMethod = 'api-key'
+      return
+    }
+    throw createError({ statusCode: 401, message: 'Invalid API key' })
+  }
+
+  // 2. Check session cookie (JWT)
   const token = getCookie(event, 'forgecrawl_session')
   if (token) {
     const result = await verifyToken(token)

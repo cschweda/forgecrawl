@@ -54,6 +54,7 @@ Phase 1 (Foundation & Auth) is fully implemented and tested. The app is function
 - Sitemap detection (notification only — crawling is Phase 3)
 - Auto `https://` prefix on URLs
 - SSRF protection (private IPs, localhost, cloud metadata, DNS resolution check)
+- API key auth (`Bearer fc_...`) for CLI/scripting use
 - Login rate limiting (5 attempts per email per 15 minutes)
 - Health check endpoint (no auth required)
 - Docker Compose deployment
@@ -63,7 +64,7 @@ Phase 1 (Foundation & Auth) is fully implemented and tested. The app is function
 
 - **Phase 2:** Puppeteer JS rendering, filesystem storage, PDF/DOCX extraction
 - **Phase 3:** Job queue, multi-page site crawling, robots.txt
-- **Phase 4:** API key auth, multi-user management
+- **Phase 4:** Multi-user management
 - **Phase 5:** RAG chunking, login-gated scraping, export formats
 
 ## Quick Start — Development
@@ -156,43 +157,94 @@ forgecrawl/
 │           ├── middleware/     # JWT auth middleware
 │           ├── engine/         # scraper, fetcher, extractor, converter, cache
 │           ├── db/             # schema, migrations, init
-│           ├── auth/           # password (bcrypt), jwt (jose)
+│           ├── auth/           # password (bcrypt), jwt (jose), api-key (SHA-256)
 │           └── utils/          # SSRF validation, rate limiter
 └── docs/                       # Design documents
 ```
 
 ## API
 
+All API endpoints except the health check require authentication via a **Bearer token** (API key) or a session cookie.
+
+### No authentication required
+
 ```bash
-# Health check (no auth)
+# Health check
 curl http://localhost:5150/api/health
+```
 
-# Login
-curl -X POST http://localhost:5150/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"you@example.com","password":"yourpassword"}' \
-  -c cookies.txt
+### Authentication: get an API key
 
+Log into the web UI, navigate to the API Keys section, and create a key. The key (`fc_...`) is shown once — store it securely. Then use it in all requests:
+
+```bash
+# Set your API key (shown once when created)
+export FC_KEY="fc_your_api_key_here"
+```
+
+### Authenticated endpoints
+
+```bash
 # Scrape a URL
 curl -X POST http://localhost:5150/api/scrape \
+  -H "Authorization: Bearer $FC_KEY" \
   -H "Content-Type: application/json" \
-  -b cookies.txt \
   -d '{"url": "https://example.com"}'
 
 # Scrape with cache bypass
 curl -X POST http://localhost:5150/api/scrape \
+  -H "Authorization: Bearer $FC_KEY" \
   -H "Content-Type: application/json" \
-  -b cookies.txt \
   -d '{"url": "https://example.com", "bypass_cache": true}'
 
 # List scrapes
-curl http://localhost:5150/api/scrapes -b cookies.txt
+curl http://localhost:5150/api/scrapes \
+  -H "Authorization: Bearer $FC_KEY"
 
 # Get scrape detail
-curl http://localhost:5150/api/scrapes/{job_id} -b cookies.txt
+curl http://localhost:5150/api/scrapes/{job_id} \
+  -H "Authorization: Bearer $FC_KEY"
 
 # Delete a scrape
-curl -X DELETE http://localhost:5150/api/scrapes/{job_id} -b cookies.txt
+curl -X DELETE http://localhost:5150/api/scrapes/{job_id} \
+  -H "Authorization: Bearer $FC_KEY"
+```
+
+### API key management
+
+```bash
+# Create an API key (requires session cookie from login)
+curl -X POST http://localhost:5150/api/auth/api-keys \
+  -H "Authorization: Bearer $FC_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "my-script"}'
+
+# List your API keys (key values are never shown — only prefixes)
+curl http://localhost:5150/api/auth/api-keys \
+  -H "Authorization: Bearer $FC_KEY"
+
+# Revoke an API key
+curl -X DELETE http://localhost:5150/api/auth/api-keys/{key_id} \
+  -H "Authorization: Bearer $FC_KEY"
+```
+
+### Node.js / scripting example
+
+```js
+const FC_URL = 'http://localhost:5150'
+const FC_KEY = process.env.FC_KEY
+
+const res = await fetch(`${FC_URL}/api/scrape`, {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${FC_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ url: 'https://example.com' }),
+})
+
+const { markdown, title, wordCount } = await res.json()
+console.log(`Scraped "${title}" (${wordCount} words)`)
 ```
 
 ## Configuration
@@ -242,6 +294,7 @@ ForgeCrawl is designed to be deployed on a server you control, scraping arbitrar
 | **Constant-time verification** | Password comparison uses `bcrypt.compare` which is constant-time; login also hashes a dummy value on user-not-found to prevent timing-based user enumeration |
 | **Session expiry** | Configurable JWT lifetime (default 15 days) with automatic expired-token detection and stale cookie cleanup |
 | **Auth secret validation** | `NUXT_AUTH_SECRET` must be at least 32 characters; the app throws on first auth action if missing |
+| **API key auth** | Bearer tokens (`fc_...`) with SHA-256 hashed storage — raw keys shown once at creation and never stored. Keys support optional expiry and are scoped to the creating user |
 | **Setup lockout** | First-run admin registration (`/setup`) is permanently locked after the first admin account is created — stored in the database, not bypassable |
 
 ### Server-Side Request Forgery (SSRF) Protection
@@ -278,7 +331,6 @@ Scraping user-supplied URLs is a high-risk operation. ForgeCrawl blocks SSRF at 
 - **No CSRF token** — SameSite=Lax cookies block cross-origin POST, which covers all mutation endpoints. Same-site subdomain attacks are not protected, but acceptable for single-server self-hosted deployment.
 - **In-memory rate limiter** — resets on server restart. Acceptable for single-user deployment; persistent rate limiting via SQLite planned for a future phase.
 - **Single user only** — no multi-user management until Phase 4.
-- **No API key auth** — browser sessions only until Phase 4.
 
 ## Phase 2: What's Next
 
