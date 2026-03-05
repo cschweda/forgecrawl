@@ -71,7 +71,7 @@ Phase 1 (Foundation & Auth) is fully implemented and tested. The app is function
 
 ```bash
 # Prerequisites: Node.js 22+, pnpm
-git clone https://github.com/ICJIA/forgecrawl
+git clone https://github.com/cschweda/forgecrawl
 cd forgecrawl
 pnpm install
 
@@ -108,7 +108,7 @@ pnpm test
 ## Quick Start — Docker Compose
 
 ```bash
-git clone https://github.com/ICJIA/forgecrawl
+git clone https://github.com/cschweda/forgecrawl
 cd forgecrawl
 docker compose up -d
 # Visit http://localhost:5150
@@ -118,7 +118,7 @@ docker compose up -d
 ## Quick Start — Bare Metal (PM2)
 
 ```bash
-git clone https://github.com/ICJIA/forgecrawl
+git clone https://github.com/cschweda/forgecrawl
 cd forgecrawl
 pnpm install
 cp .env.example .env
@@ -190,7 +190,7 @@ location / {
 
 | Type | Name | Value |
 |------|------|-------|
-| CNAME (or Netlify DNS) | `forgecrawl.com` | Netlify's load balancer |
+| ALIAS (or ANAME) | `forgecrawl.com` | `forgecrawl.netlify.app` |
 | A | `api.forgecrawl.com` | Your droplet IP (e.g., `143.198.x.x`) |
 
 ## Marketing Site
@@ -293,7 +293,7 @@ forgecrawl/
 │   │   ├── netlify.toml
 │   │   ├── app/
 │   │   │   ├── pages/index.vue # Landing page
-│   │   │   ├── app.config.ts   # Nuxt UI theme (forge colors)
+│   │   │   ├── app.config.ts   # Nuxt UI theme (orange palette)
 │   │   │   └── assets/css/
 │   │   └── public/
 │   │       ├── og-image.png    # SEO/social sharing image

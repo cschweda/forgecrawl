@@ -364,7 +364,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl
 <span class="text-(--color-orange-500)">$</span> docker compose up -d
-<span class="text-(--color-neutral-400)"># Visit https://api.forgecrawl.com</span></pre>
+<span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
             </div>
           </div>
 
@@ -381,7 +381,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl && pnpm install
 <span class="text-(--color-orange-500)">$</span> cp .env.example .env
 <span class="text-(--color-orange-500)">$</span> pnpm build && pm2 start ecosystem.config.cjs
-<span class="text-(--color-neutral-400)"># Visit https://api.forgecrawl.com</span></pre>
+<span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
             </div>
           </div>
         </div>
