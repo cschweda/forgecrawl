@@ -284,13 +284,13 @@ const userStories = [
         </div>
 
         <!-- Before/After comparison -->
-        <div class="grid lg:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto items-start">
+        <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-6 mb-12 max-w-6xl mx-auto items-start">
           <div class="rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/20 p-6">
             <div class="flex items-center gap-2 mb-4">
               <UIcon name="i-lucide-x-circle" class="text-red-500" />
               <span class="font-bold text-sm uppercase tracking-wider text-red-600 dark:text-red-400">Raw HTML — 41,823 bytes</span>
             </div>
-            <div class="rounded-xl bg-white/80 dark:bg-(--color-neutral-950) border border-(--color-neutral-200) dark:border-(--color-neutral-800) p-4 font-mono text-xs leading-relaxed overflow-x-auto text-(--color-neutral-500) max-h-[480px] overflow-y-auto">
+            <div class="rounded-xl bg-white/80 dark:bg-(--color-neutral-950) border border-(--color-neutral-200) dark:border-(--color-neutral-800) p-4 font-mono text-xs leading-relaxed overflow-x-auto text-(--color-neutral-500)">
               <pre>&lt;!DOCTYPE html&gt;
 &lt;html lang="en" dir="ltr" class="dark-mode js"&gt;
 &lt;head&gt;
