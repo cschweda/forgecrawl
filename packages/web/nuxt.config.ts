@@ -13,7 +13,7 @@ export default defineNuxtConfig({
 
   ui: {
     theme: {
-      colors: ['forge'],
+      colors: ['orange'],
     },
   },
 
