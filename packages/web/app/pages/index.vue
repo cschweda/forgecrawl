@@ -117,12 +117,12 @@ const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose J
         <div class="relative mx-auto max-w-6xl px-6 pt-20 pb-24">
           <!-- Banner -->
           <div class="mx-auto max-w-4xl mb-12 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-(--color-neutral-200) dark:ring-(--color-neutral-800)">
-            <img src="/og-image.png" alt="ForgeCrawl — Web content oranged into Markdown for LLMs" class="w-full" width="1280" height="640" />
+            <img src="/og-image.png" alt="ForgeCrawl — Web content forged into Markdown for LLMs" class="w-full" width="1280" height="640" />
           </div>
 
           <div class="text-center max-w-3xl mx-auto">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
-              Web content oranged into
+              Web content forged into
               <span class="bg-gradient-to-r from-(--color-orange-400) to-(--color-orange-600) bg-clip-text text-transparent">Markdown for LLMs</span>
             </h1>
             <p class="text-lg sm:text-xl text-(--color-neutral-500) leading-relaxed mb-10 max-w-2xl mx-auto">
