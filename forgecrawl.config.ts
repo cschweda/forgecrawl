@@ -73,7 +73,7 @@ export const config = {
    *                   worlds for most deployments. (DEFAULT)
    */
   storage: {
-    mode: 'both' as 'database' | 'filesystem' | 'both',
+    mode: 'database' as 'database' | 'filesystem' | 'both',
 
     /**
      * Base directory for the SQLite database file and filesystem storage.
@@ -210,10 +210,14 @@ export const config = {
     cookieName: 'forgecrawl_session',
 
     /**
-     * Session duration in seconds. Default is 7 days (604800 seconds).
+     * Session duration in seconds. Controls both JWT expiry and cookie maxAge.
      * After this, users must log in again. Shorter = more secure but more annoying.
+     *
+     *   604800   = 7 days
+     *   1296000  = 15 days (default)
+     *   2592000  = 30 days
      */
-    cookieMaxAge: 7 * 24 * 60 * 60, // 7 days
+    sessionMaxAge: 15 * 24 * 60 * 60, // 15 days
   },
 
   /**
@@ -300,6 +304,7 @@ export function toRuntimeConfig() {
     cacheTtl: config.scrape.cacheTtl,
     puppeteerConcurrency: config.puppeteer.concurrency,
     puppeteerExecutablePath: config.puppeteer.executablePath,
+    sessionMaxAge: config.auth.sessionMaxAge,
     alertWebhook: config.alerts.webhookUrl,
 
     // ── Client-visible values (safe to expose to the browser) ─────────────

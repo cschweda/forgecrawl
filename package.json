@@ -1,0 +1,26 @@
+{
+  "name": "forgecrawl",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-hosted web scraper that converts websites to clean Markdown for LLMs",
+  "author": "cschweda",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @forgecrawl/app dev",
+    "build": "pnpm --filter @forgecrawl/app build",
+    "start": "pnpm --filter @forgecrawl/app start",
+    "db:generate": "pnpm --filter @forgecrawl/app db:generate",
+    "db:migrate": "pnpm --filter @forgecrawl/app db:migrate"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "bcrypt",
+      "better-sqlite3",
+      "esbuild"
+    ]
+  }
+}

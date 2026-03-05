@@ -1,0 +1,16 @@
+node_modules
+.git
+.nuxt
+.output
+data
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.env
+.env.local
+docs
+*.md
+!README.md
+.vscode
+.idea
+coverage
