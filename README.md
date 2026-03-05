@@ -41,7 +41,7 @@ Phase 1 (Foundation & Auth) is fully implemented and tested. The app is function
 
 ```bash
 # Prerequisites: Node.js 22+, pnpm
-git clone https://github.com/cschweda/forgecrawl
+git clone https://github.com/ICJIA/forgecrawl
 cd forgecrawl
 pnpm install
 
@@ -58,7 +58,7 @@ pnpm dev
 ## Quick Start — Docker Compose
 
 ```bash
-git clone https://github.com/cschweda/forgecrawl
+git clone https://github.com/ICJIA/forgecrawl
 cd forgecrawl
 docker compose up -d
 # Visit http://localhost:3000
@@ -68,7 +68,7 @@ docker compose up -d
 ## Quick Start — Bare Metal (PM2)
 
 ```bash
-git clone https://github.com/cschweda/forgecrawl
+git clone https://github.com/ICJIA/forgecrawl
 cd forgecrawl
 pnpm install
 cp .env.example .env
