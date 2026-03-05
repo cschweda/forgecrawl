@@ -93,23 +93,22 @@ Adjust `puppeteer.concurrency` in `forgecrawl.config.ts` to match your server's 
 
 ## Deployment
 
-ForgeCrawl supports two deployment methods. Both produce the same running application — choose based on your comfort level and infrastructure preferences.
+ForgeCrawl supports three deployment methods. All produce the same running application — choose based on your infrastructure.
 
-### Docker Compose vs Bare Metal
+### Deployment Options
 
-| | Docker Compose | Bare Metal (PM2) |
-|---|---|---|
-| **Setup effort** | Minimal — one command | Manual — install Node, pnpm, Chromium, PM2 |
-| **Chromium install** | Handled by Dockerfile | You install and maintain it |
-| **Isolation** | Runs in a container, won't conflict with other apps | Runs directly on the host |
-| **Updates** | Rebuild the image (`docker compose build`) | `git pull && pnpm build && pm2 restart` |
-| **Log management** | `docker compose logs -f` | PM2 logs or custom log files |
-| **SSL/Nginx** | Add via `docker-compose.prod.yml` overlay | Configure Nginx + Certbot manually |
-| **Resource overhead** | Slightly higher (container layer) | Slightly lower (no container overhead) |
-| **Debugging** | Exec into container (`docker exec -it ...`) | Direct access to process and filesystem |
-| **Best for** | Quick deploys, CI/CD, reproducible environments | Full server control, custom setups, existing PM2 workflows |
+| | Docker Compose | Bare Metal (PM2) | Laravel Forge |
+|---|---|---|---|
+| **Setup effort** | Minimal — one command | Manual — install Node, pnpm, Chromium, PM2 | Moderate — Forge handles Nginx, PM2, SSL |
+| **Chromium install** | Handled by Dockerfile | You install and maintain it | You install it; Forge manages everything else |
+| **Nginx / SSL** | Add via `docker-compose.prod.yml` overlay | Configure Nginx + Certbot manually | Forge manages both automatically |
+| **Process management** | Docker handles restarts | PM2 via `ecosystem.config.cjs` | Forge's built-in PM2 (daemon) |
+| **Updates** | `docker compose build && docker compose up -d` | `git pull && pnpm build && pm2 restart` | Push to repo; Forge deploy script runs automatically |
+| **Isolation** | Container — won't conflict with other apps | Runs directly on the host | Runs directly, but Forge isolates sites |
+| **Resource overhead** | Slightly higher (container layer) | Lowest | Lowest |
+| **Best for** | Quick deploys, CI/CD, reproducible environments | Full server control, custom setups | Teams already using Forge for other projects |
 
-**Recommendation:** Use Docker Compose unless you have a reason not to. It handles Chromium installation, process management, and data persistence out of the box. Bare metal is a good choice if you're already running PM2 on your server or prefer direct control.
+**Recommendation:** Use **Docker Compose** for the simplest setup. Use **Laravel Forge** if you already manage servers with Forge. Use **bare metal** if you want full manual control.
 
 ### Quick Start — Docker Compose
 
@@ -142,6 +141,70 @@ pm2 save && pm2 startup    # Auto-start on reboot
 ```
 
 See [`ecosystem.config.cjs`](ecosystem.config.cjs) for detailed PM2 configuration and tuning options.
+
+### Quick Start — Laravel Forge
+
+[Laravel Forge](https://forge.laravel.com) provisions Ubuntu servers with Nginx, Node.js, PM2, and free SSL certificates out of the box. No Docker needed.
+
+**1. Provision a server** in Forge (DigitalOcean, AWS, etc.). Select **Node.js** as the server type.
+
+**2. Create a new site** in Forge pointed at your domain. Set the web directory to `/packages/app/.output/public`.
+
+**3. Install Chromium** on the server (SSH or Forge recipe):
+
+```bash
+sudo apt-get update && sudo apt-get install -y chromium-browser fonts-liberation fonts-noto-cjk
+```
+
+**4. Link your repo** — connect the GitHub repo (`cschweda/forgecrawl`) to the site in Forge.
+
+**5. Set environment variables** in Forge's site environment panel:
+
+```
+NUXT_AUTH_SECRET=your-secret-here-min-32-chars
+NODE_ENV=production
+PORT=3000
+```
+
+**6. Set the deploy script** in Forge:
+
+```bash
+cd /home/forge/forgecrawl
+
+git pull origin $FORGE_SITE_BRANCH
+
+# Install dependencies
+pnpm install --frozen-lockfile
+
+# Build the Nuxt app
+cd packages/app
+pnpm build
+cd ../..
+
+# Restart via PM2 (Forge manages PM2 as a daemon)
+pm2 startOrRestart ecosystem.config.cjs --update-env
+```
+
+**7. Configure Nginx** — update the Forge-generated Nginx config to proxy to the Node app:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    proxy_read_timeout 120s;
+}
+```
+
+**8. Enable SSL** — click "Let's Encrypt" in Forge's SSL panel. Done.
+
+After the first deploy, push to your repo and Forge will automatically pull, build, and restart the app.
 
 ## Project Structure
 
