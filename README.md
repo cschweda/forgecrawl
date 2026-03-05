@@ -152,9 +152,50 @@ ForgeCrawl requires a traditional server (VPS, Droplet, bare metal) and **cannot
 
 > **Note:** The marketing site (`packages/web`) deploys to Netlify as a static site — see the Marketing Site section below.
 
+## Deployment Architecture
+
+ForgeCrawl uses a split-domain architecture:
+
+| Domain | Host | Purpose |
+|--------|------|---------|
+| `forgecrawl.com` | Netlify | Static marketing site (SSG) |
+| `api.forgecrawl.com` | DigitalOcean Droplet (via Laravel Forge) | Scraper API (Nuxt server + SQLite) |
+
+The marketing site is purely static HTML — no API, no server. The scraper API runs on your VPS behind Nginx (managed by Laravel Forge) with SSL via Let's Encrypt.
+
+### Laravel Forge Setup for `api.forgecrawl.com`
+
+1. In Laravel Forge, create a **new site** on your droplet with domain `api.forgecrawl.com`
+2. Edit the **Nginx configuration** to proxy to the ForgeCrawl app:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:5150;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+}
+```
+
+3. Click **SSL** → **Let's Encrypt** to provision a free certificate for `api.forgecrawl.com`
+4. Add a **DNS A record**: `api.forgecrawl.com` → your droplet's IP address
+5. Start the app on the droplet via Docker Compose or PM2 (see Quick Start above)
+
+### DNS Records
+
+| Type | Name | Value |
+|------|------|-------|
+| CNAME (or Netlify DNS) | `forgecrawl.com` | Netlify's load balancer |
+| A | `api.forgecrawl.com` | Your droplet IP (e.g., `143.198.x.x`) |
+
 ## Marketing Site
 
-The marketing site (`packages/web`) is a separate Nuxt 4 static site with SEO, dark/light mode, and the forge aesthetic. It deploys to Netlify and lives at [forgecrawl.com](https://forgecrawl.com).
+The marketing site (`packages/web`) is a separate Nuxt 4 static site with SEO, dark/light mode, and the forge aesthetic. It deploys to Netlify at [forgecrawl.com](https://forgecrawl.com). The API examples on the site point to `https://api.forgecrawl.com`.
 
 ### Development
 
@@ -217,12 +258,14 @@ After deploying, confirm the site is fully static:
 - The `netlify.toml` has **no** `/* → /index.html` rewrite (that would be SPA mode)
 - Each route gets its own `index.html` in `.output/public/`
 
-#### Custom Domain
+#### Custom Domain (`forgecrawl.com`)
 
 1. In Netlify, go to **Domain management** → **Add custom domain**
-2. Enter `forgecrawl.com` (or your domain)
-3. Update your DNS records as instructed (either Netlify DNS or an A/CNAME record)
+2. Enter `forgecrawl.com`
+3. Update your DNS records as instructed (either Netlify DNS or a CNAME record)
 4. Netlify provisions a free SSL certificate automatically
+
+> **Note:** The API lives at `api.forgecrawl.com` on your VPS — see the [Deployment Architecture](#deployment-architecture) section above for DNS setup.
 
 ### Features
 

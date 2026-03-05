@@ -250,7 +250,7 @@ const userStories = [
           <div>
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Scrape a page</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST http://localhost:5150/api/scrape \
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST https://api.forgecrawl.com/api/scrape \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Authorization: Bearer $FC_KEY"</span> \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Content-Type: application/json"</span> \
   -d <span class="text-amber-600 dark:text-amber-400">'{"url": "https://example.com"}'</span></pre>
@@ -273,7 +273,7 @@ const userStories = [
           <div class="lg:col-span-2">
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Node.js example</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'http://localhost:5150/api/scrape'</span>, {
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'https://api.forgecrawl.com/api/scrape'</span>, {
   method: <span class="text-amber-600 dark:text-amber-400">'POST'</span>,
   headers: {
     <span class="text-amber-600 dark:text-amber-400">'Authorization'</span>: <span class="text-amber-600 dark:text-amber-400">`Bearer ${process.env.FC_KEY}`</span>,
@@ -364,7 +364,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl
 <span class="text-(--color-orange-500)">$</span> docker compose up -d
-<span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
+<span class="text-(--color-neutral-400)"># Visit https://api.forgecrawl.com</span></pre>
             </div>
           </div>
 
@@ -381,7 +381,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl && pnpm install
 <span class="text-(--color-orange-500)">$</span> cp .env.example .env
 <span class="text-(--color-orange-500)">$</span> pnpm build && pm2 start ecosystem.config.cjs
-<span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
+<span class="text-(--color-neutral-400)"># Visit https://api.forgecrawl.com</span></pre>
             </div>
           </div>
         </div>
