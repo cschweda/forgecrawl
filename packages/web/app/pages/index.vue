@@ -265,6 +265,33 @@ const userStories = [
     needs: ['Bulk conversion to clean Markdown', 'Preserved headings, tables, and code blocks', 'YAML metadata for CMS import'],
   },
 ]
+
+const roadmap = [
+  {
+    phase: '2',
+    title: 'JS Rendering & Document Support',
+    icon: 'i-lucide-monitor-play',
+    highlights: ['Puppeteer engine for SPAs and JS-heavy pages', 'PDF and DOCX to Markdown extraction', 'Configurable storage: database, filesystem, or both', 'Wait-for-selector support for dynamic content'],
+  },
+  {
+    phase: '3',
+    title: 'Site Crawling & Job Queue',
+    icon: 'i-lucide-network',
+    highlights: ['Crawl entire sitemaps or subsections by URL pattern', 'Async job queue with real-time progress tracking', 'Depth control, max pages, include/exclude filters', 'robots.txt compliance and per-domain rate limiting', 'Pause, resume, and cancel active crawls'],
+  },
+  {
+    phase: '4',
+    title: 'Multi-User & Usage Tracking',
+    icon: 'i-lucide-users',
+    highlights: ['Admin user management with role enforcement', 'Per-user usage stats: scrapes, pages, storage', 'Per-user rate limits configurable by admin', 'Auto-generated API documentation'],
+  },
+  {
+    phase: '5',
+    title: 'RAG Chunking & Advanced Features',
+    icon: 'i-lucide-scissors',
+    highlights: ['Token-aware chunking with semantic boundaries', 'Chunk metadata: heading context, position, token count', 'Login-gated scraping via cookie injection', 'Export to JSON, JSONL, or zipped Markdown', 'Production monitoring and alerting'],
+  },
+]
 </script>
 
 <template>
@@ -905,6 +932,48 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
       </section>
     </main>
 
+    <!-- Roadmap -->
+    <section id="roadmap" class="border-t border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-900)/50">
+      <div class="mx-auto max-w-6xl px-6 py-24">
+        <div class="text-center mb-16">
+          <p class="text-sm font-semibold tracking-widest uppercase text-(--color-orange-500) mb-3">Roadmap</p>
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">What's coming next</h2>
+          <p class="mt-4 text-(--color-neutral-500) max-w-2xl mx-auto">ForgeCrawl is actively developed. Here's a look at what's on the horizon — including full sitemap crawling, JS rendering, and RAG-ready chunking.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div
+            v-for="item in roadmap"
+            :key="item.phase"
+            class="rounded-2xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-white/70 dark:bg-(--color-neutral-900)/70 p-7 transition-all hover:border-(--color-orange-400) dark:hover:border-(--color-orange-700)"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-(--color-orange-500)/10 flex items-center justify-center">
+                <UIcon :name="item.icon" class="text-(--color-orange-500) text-xl" />
+              </div>
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-(--color-orange-500)">Phase {{ item.phase }}</p>
+                <h3 class="font-bold">{{ item.title }}</h3>
+              </div>
+            </div>
+            <ul class="space-y-2">
+              <li v-for="h in item.highlights" :key="h" class="flex items-start gap-2 text-sm text-(--color-neutral-500)">
+                <UIcon name="i-lucide-circle-dot" class="text-(--color-orange-500)/50 mt-0.5 shrink-0 text-xs" />
+                <span>{{ h }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 text-center">
+          <p class="text-sm text-(--color-neutral-400)">
+            Want to follow progress or contribute?
+            <a href="https://github.com/ICJIA/forgecrawl" target="_blank" rel="noopener" class="text-(--color-orange-500) hover:underline">Star the repo on GitHub</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="border-t border-(--color-neutral-200) dark:border-(--color-neutral-800)">
       <div class="mx-auto max-w-6xl px-6 py-12">
@@ -921,6 +990,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
             <a href="https://github.com/ICJIA/forgecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
             <a href="#why-markdown" class="hover:text-(--color-orange-500) transition-colors">Why Markdown</a>
             <a href="#api" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
+            <a href="#roadmap" class="hover:text-(--color-orange-500) transition-colors">Roadmap</a>
           </div>
         </div>
       </div>
