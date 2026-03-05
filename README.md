@@ -164,25 +164,65 @@ pnpm dev:web
 # Visit http://localhost:3200
 ```
 
-### Deploy to Netlify
+### Deploy to Netlify (Static Site)
 
-The site generates as fully static HTML — no server required.
+ForgeCrawl's marketing site deploys as a **fully static site** (SSG) — not a single-page app (SPA). Nuxt pre-renders every route to plain HTML at build time, so there's no server, no functions, and no client-side routing fallback needed. This is configured via `nitro: { preset: 'static' }` in `nuxt.config.ts`.
+
+#### Option A: Automatic via `netlify.toml` (Recommended)
+
+The repo includes `packages/web/netlify.toml` which configures everything. Just connect the repo:
+
+1. Log in to [Netlify](https://app.netlify.com) and click **Add new site** → **Import an existing project**
+2. Select your GitHub repo (`cschweda/forgecrawl`)
+3. Netlify will auto-detect `packages/web/netlify.toml` — verify the settings:
+   - **Base directory:** `packages/web`
+   - **Build command:** `npx nuxt generate`
+   - **Publish directory:** `.output/public`
+   - **Node version:** 22
+4. Click **Deploy site**
+
+That's it. Every push to `main` triggers a rebuild.
+
+#### Option B: Manual Netlify Configuration
+
+If the `netlify.toml` isn't detected, configure manually:
+
+1. **Add new site** → **Import an existing project** → select the repo
+2. Under **Build settings**:
+   - **Base directory:** `packages/web`
+   - **Build command:** `npx nuxt generate`
+   - **Publish directory:** `packages/web/.output/public`
+3. Under **Environment variables**, add:
+   - `NODE_VERSION` = `22`
+4. Click **Deploy site**
+
+#### Option C: Local Build + Manual Deploy
 
 ```bash
-# Generate static site locally
+# Generate the static site
 pnpm build:web
-# Output: packages/web/.output/public/
+
+# The output is in packages/web/.output/public/
+# This directory contains plain HTML, CSS, JS — ready to upload
+
+# Deploy via Netlify CLI
+npx netlify-cli deploy --prod --dir=packages/web/.output/public
 ```
 
-**Netlify setup:**
+#### Verify It's Static (Not SPA)
 
-1. Connect the GitHub repo to Netlify
-2. Set **Base directory** to `packages/web`
-3. Set **Build command** to `npx nuxt generate`
-4. Set **Publish directory** to `.output/public`
-5. Set **Node.js version** to 22 (under Environment variables: `NODE_VERSION=22`)
+After deploying, confirm the site is fully static:
 
-Or use the included `packages/web/netlify.toml` which configures all of this automatically.
+- View source on any page — you should see fully rendered HTML content, not an empty `<div id="app"></div>`
+- The `netlify.toml` has **no** `/* → /index.html` rewrite (that would be SPA mode)
+- Each route gets its own `index.html` in `.output/public/`
+
+#### Custom Domain
+
+1. In Netlify, go to **Domain management** → **Add custom domain**
+2. Enter `forgecrawl.com` (or your domain)
+3. Update your DNS records as instructed (either Netlify DNS or an A/CNAME record)
+4. Netlify provisions a free SSL certificate automatically
 
 ### Features
 
@@ -191,7 +231,7 @@ Or use the included `packages/web/netlify.toml` which configures all of this aut
 - Full SEO: Open Graph, Twitter Card, canonical URL, structured meta
 - OG image (`og-image.png`) — the forge-themed banner
 - Responsive design with glassmorphism cards
-- Sections: Hero, Features, How It Works, API docs, Security, Get Started, Use Cases
+- Sections: Hero, Features, How It Works, API docs, Security, Get Started, Use Cases, Why Do I Need This?
 - Static generation — zero server-side runtime
 
 ## Project Structure

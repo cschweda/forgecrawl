@@ -65,6 +65,37 @@ const endpoints = [
 ]
 
 const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose JWT', 'Readability', 'Turndown', 'Docker', 'PM2']
+
+const userStories = [
+  {
+    icon: 'i-lucide-briefcase',
+    role: 'Engineering Manager',
+    color: 'text-(--color-orange-500)',
+    quote: '"We needed web data for our AI features but couldn\'t send customer URLs to third-party APIs. ForgeCrawl runs on our own infra — compliance approved it in a day."',
+    needs: ['Data stays on-premise', 'No per-page costs to budget', 'Simple Docker deploy for the team'],
+  },
+  {
+    icon: 'i-lucide-code',
+    role: 'Developer',
+    color: 'text-(--color-orange-400)',
+    quote: '"I was copy-pasting docs into ChatGPT and losing formatting every time. Now I hit one endpoint and get perfect Markdown with frontmatter. It\'s in my shell aliases."',
+    needs: ['Clean API with Bearer auth', 'Markdown output ready for LLMs', 'curl-friendly — no SDK needed'],
+  },
+  {
+    icon: 'i-lucide-clipboard-list',
+    role: 'Project Manager',
+    color: 'text-(--color-orange-500)',
+    quote: '"Our content team archives 200+ policy pages a quarter. ForgeCrawl replaced a brittle Python script and a $400/mo SaaS subscription."',
+    needs: ['Bulk scraping with caching', 'YAML metadata for organization', 'Free — no vendor lock-in'],
+  },
+  {
+    icon: 'i-lucide-graduation-cap',
+    role: 'Researcher',
+    color: 'text-(--color-orange-400)',
+    quote: '"I\'m building a RAG pipeline over government datasets. ForgeCrawl gives me structured Markdown with source URLs and timestamps — exactly what my embeddings need."',
+    needs: ['Consistent output format', 'Source attribution in frontmatter', 'Self-hosted for IRB compliance'],
+  },
+]
 </script>
 
 <template>
@@ -84,6 +115,7 @@ const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose J
           <a href="#how-it-works" class="hover:text-(--color-orange-500) transition-colors">How It Works</a>
           <a href="#api" class="hover:text-(--color-orange-500) transition-colors">API</a>
           <a href="#security" class="hover:text-(--color-orange-500) transition-colors">Security</a>
+          <a href="#why" class="hover:text-(--color-orange-500) transition-colors">Why</a>
         </nav>
 
         <div class="flex items-center gap-2">
@@ -95,7 +127,7 @@ const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose J
             @click="toggleColorMode"
           />
           <UButton
-            to="https://github.com/ICJIA/orangecrawl"
+            to="https://github.com/cschweda/forgecrawl"
             target="_blank"
             icon="i-lucide-github"
             label="GitHub"
@@ -138,7 +170,7 @@ const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose J
                 class="bg-gradient-to-r from-(--color-orange-500) to-(--color-orange-600) hover:from-(--color-orange-600) hover:to-(--color-orange-700) text-white shadow-lg"
               />
               <UButton
-                to="https://github.com/ICJIA/orangecrawl"
+                to="https://github.com/cschweda/forgecrawl"
                 target="_blank"
                 icon="i-lucide-github"
                 label="View on GitHub"
@@ -152,7 +184,7 @@ const techStack = ['Nuxt 4', 'Vue 3', 'SQLite', 'Drizzle ORM', 'bcrypt', 'jose J
           <!-- Install command -->
           <div class="mt-14 mx-auto max-w-xl">
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) px-5 py-4 font-mono text-sm text-(--color-neutral-600) dark:text-(--color-neutral-400)">
-              <span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/orangecrawl && docker compose up -d
+              <span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl && docker compose up -d
             </div>
           </div>
         </div>
@@ -300,7 +332,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
           <div class="mt-10 text-center">
             <p class="text-sm text-(--color-neutral-400)">
               81 integration tests covering auth, SSRF, rate limiting, error sanitization, and data isolation.
-              <a href="https://github.com/ICJIA/orangecrawl#testing" target="_blank" rel="noopener" class="text-(--color-orange-500) hover:underline">View test details →</a>
+              <a href="https://github.com/cschweda/forgecrawl#testing" target="_blank" rel="noopener" class="text-(--color-orange-500) hover:underline">View test details →</a>
             </p>
           </div>
         </div>
@@ -323,7 +355,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <h3 class="text-lg font-bold">Docker Compose</h3>
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/orangecrawl
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd orangecrawl
 <span class="text-(--color-orange-500)">$</span> docker compose up -d
 <span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
@@ -339,7 +371,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <h3 class="text-lg font-bold">Bare Metal (PM2)</h3>
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/orangecrawl
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd orangecrawl && pnpm install
 <span class="text-(--color-orange-500)">$</span> cp .env.example .env
 <span class="text-(--color-orange-500)">$</span> pnpm build && pm2 start ecosystem.config.cjs
@@ -396,6 +428,43 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
           </div>
         </div>
       </section>
+
+      <div class="h-px w-full" style="background: linear-gradient(90deg, transparent, var(--color-orange-500), transparent); opacity: 0.4;" />
+
+      <!-- Why Do I Need This? -->
+      <section id="why" class="mx-auto max-w-6xl px-6 py-24">
+        <div class="text-center mb-16">
+          <p class="text-sm font-semibold tracking-widest uppercase text-(--color-orange-500) mb-3">Why Do I Need This?</p>
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Real people. Real problems. One tool.</h2>
+          <p class="mt-4 text-(--color-neutral-500) max-w-2xl mx-auto">Whether you're building AI products, managing content pipelines, or doing research — if you need clean web data, ForgeCrawl replaces fragile scripts and expensive SaaS.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div
+            v-for="story in userStories"
+            :key="story.role"
+            class="rounded-2xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-white/70 dark:bg-(--color-neutral-900)/70 p-8 transition-all hover:border-(--color-orange-400) dark:hover:border-(--color-orange-700) flex flex-col"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-(--color-orange-500)/10 flex items-center justify-center">
+                <UIcon :name="story.icon" :class="story.color" class="text-xl" />
+              </div>
+              <span class="font-bold text-lg">{{ story.role }}</span>
+            </div>
+
+            <blockquote class="text-sm italic text-(--color-neutral-500) leading-relaxed mb-5 flex-1">
+              {{ story.quote }}
+            </blockquote>
+
+            <ul class="space-y-2">
+              <li v-for="need in story.needs" :key="need" class="flex items-start gap-2 text-sm">
+                <UIcon name="i-lucide-check" class="text-(--color-orange-500) mt-0.5 shrink-0" />
+                <span>{{ need }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->
@@ -411,9 +480,9 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
             </span>
           </div>
           <div class="flex items-center gap-6 text-sm text-(--color-neutral-500)">
-            <a href="https://github.com/ICJIA/orangecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
-            <a href="https://github.com/ICJIA/orangecrawl#documentation" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">Docs</a>
-            <a href="https://github.com/ICJIA/orangecrawl#api" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
+            <a href="https://github.com/cschweda/forgecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
+            <a href="https://github.com/cschweda/forgecrawl#documentation" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">Docs</a>
+            <a href="https://github.com/cschweda/forgecrawl#api" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
           </div>
         </div>
       </div>
