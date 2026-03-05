@@ -292,7 +292,7 @@ After deploying, confirm the site is fully static:
 - Full SEO: Open Graph, Twitter Card, canonical URL, structured meta
 - OG image (`og-image.png`) — the forge-themed banner
 - Responsive design with glassmorphism cards
-- Sections: Hero, Features, How It Works, Why Markdown, API docs, Security, Get Started, Use Cases, Why Do I Need This?
+- Sections: Hero, Features, How It Works, Why Markdown, API docs, Security, Get Started, Use Cases, Why Do I Need This?, Roadmap
 - Static generation — zero server-side runtime
 
 ## Project Structure
@@ -659,22 +659,58 @@ Validates that users cannot access or modify other users' data:
 
 The deliberate use of `404` instead of `403` is a security pattern — returning `403 Forbidden` would confirm the resource exists but is owned by someone else, which leaks information.
 
-## Phase 2: What's Next
+## Roadmap
 
-Phase 2 adds JavaScript rendering and storage options:
+ForgeCrawl is actively developed across five phases. Phase 1 is complete; Phases 2-5 are planned.
 
-- **Puppeteer integration** — shared browser instance with configurable concurrency for scraping SPAs and JS-heavy pages
-- **Render mode toggle** — choose HTTP-only (fast) or Puppeteer (full JS) per scrape
+### Phase 1: Foundation & Auth — Complete
+
+Single-URL HTTP scraping, JWT auth, API keys, SSRF protection, caching, scrape history, 81 integration tests. See [Current Status](#current-status-phase-1-complete) above.
+
+### Phase 2: JS Rendering & Document Support
+
+- **Puppeteer engine** — shared browser instance with configurable concurrency for SPAs and JS-heavy pages
+- **Render mode toggle** — HTTP-only (fast) or Puppeteer (full JS) per scrape
 - **`wait_for` selector** — wait for a specific CSS selector before extracting content
 - **Browser crash recovery** — auto-restart on Puppeteer disconnect
-- **Filesystem storage** — store raw HTML, Markdown, and metadata as files on disk (in addition to or instead of SQLite)
-- **Storage interface abstraction** — clean swap between database, filesystem, or both
-- **PDF extraction** — detect PDF content-type and extract text to Markdown
-- **DOCX extraction** — detect DOCX and convert to Markdown via mammoth
+- **PDF & DOCX extraction** — detect content-type and convert to Markdown
+- **Configurable storage** — database, filesystem, or both with clean abstraction layer
 - **Enhanced Markdown** — better handling of code blocks, tables, and nested structures
 - **Scrape config UI** — toggle JS rendering, set wait selectors, choose storage mode
 
-See [`docs/forgecrawl-02-phase2.md`](docs/forgecrawl-02-phase2.md) for the full Phase 2 specification.
+See [`docs/forgecrawl-02-phase2.md`](docs/forgecrawl-02-phase2.md) for the full specification.
+
+### Phase 3: Site Crawling & Job Queue
+
+- **Sitemap crawling** — crawl entire sitemaps or subsections by URL pattern
+- **Async job queue** — SQLite-backed queue with real-time progress tracking
+- **Crawl controls** — max depth, max pages, include/exclude URL filters
+- **robots.txt compliance** — automatic fetching and rule enforcement
+- **Per-domain rate limiting** — configurable delay between requests to the same host
+- **Pause, resume, cancel** — full lifecycle controls for active crawls
+- **Progress UI** — real-time dashboard showing pages discovered, scraped, failed, and queued
+
+See [`docs/forgecrawl-03-phase3.md`](docs/forgecrawl-03-phase3.md) for the full specification.
+
+### Phase 4: Multi-User & Usage Tracking
+
+- **Admin user management** — create, disable, and delete user accounts
+- **Role enforcement** — admin vs. user permissions
+- **Per-user usage stats** — scrapes count, pages scraped, storage consumed
+- **Per-user rate limits** — configurable by admin
+- **Auto-generated API docs** — documentation page built from route definitions
+
+See [`docs/forgecrawl-04-phase4.md`](docs/forgecrawl-04-phase4.md) for the full specification.
+
+### Phase 5: RAG Chunking & Advanced Features
+
+- **Token-aware chunking** — configurable max tokens with overlap and semantic boundaries
+- **Chunk metadata** — heading context, position, source URL, token count
+- **Login-gated scraping** — cookie injection and form-based login via Puppeteer
+- **Export formats** — JSON, JSONL, or zipped Markdown for pipeline integration
+- **Production hardening** — monitoring, log rotation, backup strategy, alerting webhooks
+
+See [`docs/forgecrawl-05-phase5.md`](docs/forgecrawl-05-phase5.md) for the full specification.
 
 ## Documentation
 
