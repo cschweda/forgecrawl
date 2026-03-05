@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui'],
   css: ['~/assets/css/main.css'],
   runtimeConfig: toRuntimeConfig(),
+  devServer: {
+    port: config.server.port,
+  },
   nitro: {
     preset: 'node-server',
   },

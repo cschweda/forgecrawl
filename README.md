@@ -80,7 +80,7 @@ node -e "console.log('NUXT_AUTH_SECRET=' + require('crypto').randomBytes(32).toS
 
 # Start dev server
 pnpm dev
-# Visit http://localhost:3000
+# Visit http://localhost:5150
 # Register admin account on first visit
 ```
 
@@ -90,7 +90,7 @@ pnpm dev
 git clone https://github.com/ICJIA/forgecrawl
 cd forgecrawl
 docker compose up -d
-# Visit http://localhost:3000
+# Visit http://localhost:5150
 # Auth secret auto-generates if not set
 ```
 
@@ -165,34 +165,34 @@ forgecrawl/
 
 ```bash
 # Health check (no auth)
-curl http://localhost:3000/api/health
+curl http://localhost:5150/api/health
 
 # Login
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:5150/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"you@example.com","password":"yourpassword"}' \
   -c cookies.txt
 
 # Scrape a URL
-curl -X POST http://localhost:3000/api/scrape \
+curl -X POST http://localhost:5150/api/scrape \
   -H "Content-Type: application/json" \
   -b cookies.txt \
   -d '{"url": "https://example.com"}'
 
 # Scrape with cache bypass
-curl -X POST http://localhost:3000/api/scrape \
+curl -X POST http://localhost:5150/api/scrape \
   -H "Content-Type: application/json" \
   -b cookies.txt \
   -d '{"url": "https://example.com", "bypass_cache": true}'
 
 # List scrapes
-curl http://localhost:3000/api/scrapes -b cookies.txt
+curl http://localhost:5150/api/scrapes -b cookies.txt
 
 # Get scrape detail
-curl http://localhost:3000/api/scrapes/{job_id} -b cookies.txt
+curl http://localhost:5150/api/scrapes/{job_id} -b cookies.txt
 
 # Delete a scrape
-curl -X DELETE http://localhost:3000/api/scrapes/{job_id} -b cookies.txt
+curl -X DELETE http://localhost:5150/api/scrapes/{job_id} -b cookies.txt
 ```
 
 ## Configuration
@@ -201,7 +201,7 @@ Public configuration lives in [`forgecrawl.config.ts`](forgecrawl.config.ts) (si
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `server.port` | 3000 | HTTP port |
+| `server.port` | 5150 | HTTP port |
 | `storage.mode` | database | Where results are stored |
 | `scrape.timeout` | 30000 | Page fetch timeout (ms) |
 | `scrape.cacheTtl` | 3600 | Cache TTL in seconds (0 to disable) |

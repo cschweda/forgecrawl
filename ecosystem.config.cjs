@@ -83,10 +83,10 @@ module.exports = {
 
         /**
          * HTTP port. Must match your reverse proxy (Nginx) upstream.
-         * Default is 3000 (set in forgecrawl.config.ts). Override here
+         * Default is 5150 (set in forgecrawl.config.ts). Override here
          * only if you need a different port for this deployment.
          */
-        PORT: 3000,
+        PORT: 5150,
 
         /**
          * DO NOT put secrets here. They go in .env:

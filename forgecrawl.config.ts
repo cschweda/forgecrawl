@@ -50,11 +50,11 @@ export const config = {
   /**
    * Server — where the app listens.
    * For Docker deployments, leave these as-is (the container maps ports externally).
-   * For bare-metal, change `port` if 3000 conflicts with another service.
+   * For bare-metal, change `port` if 5150 conflicts with another service.
    */
   server: {
     /** HTTP port. Override at runtime with the PORT env var if needed. */
-    port: 3000,
+    port: 5150,
 
     /**
      * Bind address. '0.0.0.0' listens on all interfaces (required for Docker).

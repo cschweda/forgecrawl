@@ -41,12 +41,12 @@ RUN chmod +x /app/docker-entrypoint.sh
 USER forgecrawl
 
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=5150
 
-EXPOSE 3000
+EXPOSE 5150
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5150/api/health || exit 1
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["node", ".output/server/index.mjs"]
