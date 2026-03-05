@@ -8,6 +8,14 @@ function toggleColorMode() {
 const userDomain = ref('your-server.example.com')
 const apiBase = computed(() => `https://${userDomain.value || 'your-server.example.com'}`)
 
+const copiedIndex = ref<number | null>(null)
+function copyEndpointCurl(index: number, curl: string) {
+  const text = curl.replaceAll('{base}', apiBase.value)
+  navigator.clipboard.writeText(text)
+  copiedIndex.value = index
+  setTimeout(() => { copiedIndex.value = null }, 2000)
+}
+
 const features = [
   {
     icon: 'i-lucide-server',
@@ -690,7 +698,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
           <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-6">All endpoints</h3>
           <div class="space-y-3">
             <details
-              v-for="ep in endpoints"
+              v-for="(ep, idx) in endpoints"
               :key="`${ep.method}-${ep.path}`"
               class="group rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) overflow-hidden"
             >
@@ -705,7 +713,16 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <div class="border-t border-(--color-neutral-200) dark:border-(--color-neutral-800) px-4 py-4 space-y-3">
                 <p class="text-sm text-(--color-neutral-500)">{{ ep.description }}</p>
                 <div>
-                  <p class="text-xs font-semibold uppercase tracking-wider text-(--color-neutral-400) mb-2">Request</p>
+                  <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-(--color-neutral-400)">Request</p>
+                    <button
+                      class="flex items-center gap-1 text-xs text-(--color-neutral-400) hover:text-(--color-orange-500) transition-colors"
+                      @click="copyEndpointCurl(idx, ep.curl)"
+                    >
+                      <UIcon :name="copiedIndex === idx ? 'i-lucide-check' : 'i-lucide-copy'" class="text-sm" />
+                      <span>{{ copiedIndex === idx ? 'Copied' : 'Copy' }}</span>
+                    </button>
+                  </div>
                   <div class="rounded-lg border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-white dark:bg-(--color-neutral-950) p-4 font-mono text-xs leading-relaxed overflow-x-auto">
                     <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> {{ ep.curl.replaceAll('{base}', apiBase) }}</pre>
                   </div>
