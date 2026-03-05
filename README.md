@@ -6,6 +6,8 @@
 
 Self-hosted, authenticated web scraper that converts website content into clean Markdown optimized for LLM consumption.
 
+https://forgecrawl.com
+
 ## Why ForgeCrawl?
 
 LLMs work best with clean, structured text — not raw HTML full of navigation, ads, and scripts. ForgeCrawl gives you a private, self-hosted tool to scrape any public webpage and get back clean Markdown with metadata, ready to feed into your AI workflows.
