@@ -161,7 +161,7 @@ const userStories = [
             @click="toggleColorMode"
           />
           <UButton
-            to="https://github.com/cschweda/forgecrawl"
+            to="https://github.com/ICJIA/forgecrawl"
             target="_blank"
             icon="i-lucide-github"
             label="GitHub"
@@ -209,7 +209,7 @@ const userStories = [
                 class="bg-gradient-to-r from-(--color-orange-500) to-(--color-orange-600) hover:from-(--color-orange-600) hover:to-(--color-orange-700) text-white shadow-lg"
               />
               <UButton
-                to="https://github.com/cschweda/forgecrawl"
+                to="https://github.com/ICJIA/forgecrawl"
                 target="_blank"
                 icon="i-lucide-github"
                 label="View on GitHub"
@@ -223,7 +223,7 @@ const userStories = [
           <!-- Install command -->
           <div class="mt-14 mx-auto max-w-xl">
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) px-5 py-4 font-mono text-sm text-(--color-neutral-600) dark:text-(--color-neutral-400)">
-              <span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl && docker compose up -d
+              <span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/forgecrawl && docker compose up -d
             </div>
           </div>
         </div>
@@ -366,7 +366,7 @@ npm install example-sdk
           <p class="text-sm font-semibold tracking-widest uppercase text-(--color-orange-500) mb-3">API</p>
           <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Built for automation</h2>
           <p class="mt-4 text-(--color-neutral-500) max-w-2xl mx-auto">
-            Every action in ForgeCrawl is available through the REST API. Authenticate with a Bearer token and integrate with any workflow.
+            Every action in ForgeCrawl is available through the REST API. Authenticate with a Bearer token and integrate with any workflow. Replace <code class="text-(--color-orange-500)">your-server.example.com</code> with your own VPS domain or IP.
           </p>
         </div>
 
@@ -374,7 +374,7 @@ npm install example-sdk
           <div>
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Scrape a page</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST https://api.forgecrawl.com/api/scrape \
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> curl -X POST https://your-server.example.com/api/scrape \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Authorization: Bearer $FC_KEY"</span> \
   -H <span class="text-emerald-600 dark:text-emerald-400">"Content-Type: application/json"</span> \
   -d <span class="text-amber-600 dark:text-amber-400">'{"url": "https://example.com"}'</span></pre>
@@ -397,7 +397,7 @@ npm install example-sdk
           <div class="lg:col-span-2">
             <h3 class="text-sm font-semibold tracking-wider uppercase text-(--color-orange-500) mb-4">Node.js example</h3>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed overflow-x-auto">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'https://api.forgecrawl.com/api/scrape'</span>, {
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-violet-600 dark:text-violet-400">const</span> res = <span class="text-violet-600 dark:text-violet-400">await</span> <span class="text-sky-600 dark:text-sky-400">fetch</span>(<span class="text-amber-600 dark:text-amber-400">'https://your-server.example.com/api/scrape'</span>, {
   method: <span class="text-amber-600 dark:text-amber-400">'POST'</span>,
   headers: {
     <span class="text-amber-600 dark:text-amber-400">'Authorization'</span>: <span class="text-amber-600 dark:text-amber-400">`Bearer ${process.env.FC_KEY}`</span>,
@@ -485,7 +485,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <h3 class="text-lg font-bold">Docker Compose</h3>
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl
 <span class="text-(--color-orange-500)">$</span> docker compose up -d
 <span class="text-(--color-neutral-400)"># Visit http://localhost:5150</span></pre>
@@ -501,7 +501,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
               <h3 class="text-lg font-bold">Bare Metal (PM2)</h3>
             </div>
             <div class="rounded-xl border border-(--color-neutral-200) dark:border-(--color-neutral-800) bg-(--color-neutral-50) dark:bg-(--color-neutral-950) p-5 font-mono text-sm leading-relaxed">
-              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/cschweda/forgecrawl
+              <pre class="text-(--color-neutral-600) dark:text-(--color-neutral-400)"><span class="text-(--color-orange-500)">$</span> git clone https://github.com/ICJIA/forgecrawl
 <span class="text-(--color-orange-500)">$</span> cd forgecrawl && pnpm install
 <span class="text-(--color-orange-500)">$</span> cp .env.example .env
 <span class="text-(--color-orange-500)">$</span> pnpm build && pm2 start ecosystem.config.cjs
@@ -610,7 +610,7 @@ console.<span class="text-sky-600 dark:text-sky-400">log</span>(<span class="tex
             </span>
           </div>
           <div class="flex items-center gap-6 text-sm text-(--color-neutral-500)">
-            <a href="https://github.com/cschweda/forgecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
+            <a href="https://github.com/ICJIA/forgecrawl" target="_blank" rel="noopener" class="hover:text-(--color-orange-500) transition-colors">GitHub</a>
             <a href="#why-markdown" class="hover:text-(--color-orange-500) transition-colors">Why Markdown</a>
             <a href="#api" class="hover:text-(--color-orange-500) transition-colors">API Reference</a>
           </div>
